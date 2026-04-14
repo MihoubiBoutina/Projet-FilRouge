@@ -1,0 +1,49 @@
+
+{% extends 'base.html.twig' %}
+{% block title %}Mes ateliers{% endblock %}
+
+{% block body %}
+<section class="formateurs-page">
+  {# Titre et description de la page #}
+  <div class="titre">
+    <h2 class="titre-text"><span>Mes</span> ateliers</h2>
+    <p>Gérez vos ateliers en tant que formateur.</p>
+  </div>
+  
+  {# Bouton permettant de créer un nouvel atelier #}
+  <div class="titre">
+    <a class="btn1" href="{{ path('app_ateliers_new') }}">Créer un atelier</a>
+  </div>
+
+  {# LISTE DES ATELIERS #}
+  {# Si le formateur n’a encore créé aucun atelier #}
+  {% if ateliers is empty %}
+    <p style="margin-top:20px; text-align:center;">Aucun atelier pour le moment.</p>
+  {% else %}
+    <div class="formateurs-grid">
+                  
+      {# Boucle Twig pour afficher chaque atelier du formateur #}
+      {% for a in ateliers %}
+        <article class="formateur-card">
+          {# Titre de l’atelier #}
+          <h3>{{ a.titre }}</h3>
+          {# Description de l’atelier #}
+          <p>{{ a.description }}</p>
+          {# Date et heure de l’atelier #}
+          <p><strong>Date :</strong> {{ a.date }} à {{ a.heure }}</p>
+          {# Durée et nombre de places disponibles #}
+          <p><strong>Durée :</strong> {{ a.duree }} min — <strong>Places :</strong> {{ a.places }}</p>
+
+            
+          {# Suppression d’un atelier  #}
+          {# Formulaire POST avec protection CSRF #}
+          <form method="post" action="{{ path('app_ateliers_delete', {id: a.id}) }}" style="margin-top:12px;">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete_atelier_' ~ a.id) }}">
+            <button type="submit" class="btn2">Supprimer</button>
+          </form>
+        </article>
+      {% endfor %}
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

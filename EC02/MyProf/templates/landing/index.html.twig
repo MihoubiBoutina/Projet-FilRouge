@@ -1,0 +1,124 @@
+
+{# Le template hérite de base.html.twig
+    Cela permet de réutiliser le header, le footer
+    et la structure globale du site #}
+{% extends 'base.html.twig' %}
+
+{# Début du bloc body qui sera injecté dans base.html.twig #}
+{% block body %}
+
+{#  SECTION BANNIÈRE #}
+<section class="banniere" id="banniere">
+    <div class="contenue">
+        {# Titre principal de la page d’accueil #}
+        <h2>Trouvez le professeur parfait</h2>
+        <p>
+            La plateforme qui relie des formateurs passionnés et des apprenants motivés
+            autour d’ateliers de formation interactifs.
+        </p>
+        {# Boutons d’appel à l’action #}
+        <a href="#" class="btn1">Réservation</a>
+        <a href="#" class="btn2">Inscription</a>
+    </div>
+</section>
+
+{# SECTION À PROPOS #}
+<section class="apropos" id="apropos">
+    <div class="row">
+        {# Colonne texte de présentation #}
+        <div class="col50">
+            <h2 class="titre-text"><span>A</span> Propos De Nous</h2>
+            <p>
+                Nous avons créé cette plateforme pour rapprocher des formateurs qualifiés et passionnés avec des apprenants désireux d’évoluer et de renforcer leurs compétences. Nous mettons en avant des ateliers de formation interactifs, conçus pour allier théorie et pratique, et adaptés aux besoins réels du marché. Notre objectif est de favoriser un environnement d’apprentissage collaboratif, accessible et humain, où le partage des connaissances, l’échange d’expériences et l’accompagnement personnalisé permettent à chacun de progresser à son rythme et de transformer l’apprentissage en une véritable opportunité d’évolution professionnelle et personnelle.
+            </p>
+        </div>
+        {# Colonne image illustrative #}
+        <div class="col50">
+            <div class="img">
+                <img src="{{ asset('image/prof5.jpg') }}" alt="image" loading="lazy">
+            </div>
+        </div>
+    </div>
+</section>
+
+{# SECTION VALEURS #}
+<section class="nosValeur" id="nosValeur">
+    <div class="row">
+        <div class="col50">
+            <h2 class="titre-text"><span>Nos</span> Valeur</h2>
+            <p>
+                Nos valeurs reposent sur une vision humaine et collaborative de l’apprentissage. Nous croyons en la transmission du savoir à travers l’échange, la pratique et l’accompagnement personnalisé. En mettant en relation des formateurs qualifiés et passionnés avec des apprenants motivés, nous favorisons un environnement accessible, bienveillant et orienté vers les besoins réels du marché. Le partage des connaissances, l’engagement et l’adaptabilité sont au cœur de notre démarche, afin de permettre à chacun de progresser à son rythme et de transformer l’apprentissage en une véritable opportunité d’évolution professionnelle et personnelle.
+            </p>
+        </div>
+    </div>
+</section>
+
+{#  SECTION FORMATEURS #}
+<section class="nosProf" id="nosProf">
+    <div class="titre">
+        <h2 class="titre-text"><span>Nos</span> Prof</h2>
+        <p>Lorem ipsum dolor sit amet.</p>
+    </div>
+
+    {# Boucle Twig pour afficher les formateurs envoyés par le contrôleur #}
+    <div class="compte">
+        {% for formateur in formateurs %}
+        <div class="box">
+            <div class="imBox">
+                <img src="{{ asset('image/' ~ formateur.photo) }}" alt="photo de {{ formateur.nom }}" loading="lazy">
+            </div>
+            <div class="text">
+                <h3>{{ formateur.nom }}</h3>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {# Bouton menant vers la page complète des formateurs #}
+    <div class="titre">
+        <a href="{{ path('app_formateurs') }}" class="btn1">Voir Plus</a>
+    </div>
+</section>
+
+{# SECTION TÉMOIGNAGES #}
+<section class="temoignage" id="temoignage">
+    <div class="titre blanc">
+        <h2 class="titre-text"><span>Que</span> Disent Nos Apprenants</h2>
+        <p>Lorem ipsum dolor sit amet.</p>
+    </div>
+
+    {# Boucle Twig pour afficher les avis des apprenants #}
+    <div class="compte">
+        {% for a in avis %}
+        <div class="box">
+            <div class="imBox">
+                <img src="{{ asset('image/' ~ a.photo) }}" alt="Photo de {{ a. nom }}" loading="lazy">
+            </div>
+            <div class="text">
+                {# Affichage des étoiles selon la note #}
+                <div class="avis-stars" aria-label="Note {{ a.note }} sur 5">
+                    {% for i in 1..5 %}
+                        {% if i <= a.note %}
+                            <i class="fa-solid fa-star"></i>
+                        {% else %}
+                            <i class="fa-regular fa-star"></i>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <p>{{ a.message }}</p>
+                <h3>{{ a.nom }}</h3>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {# Lien vers la page complète des témoignages #}
+    <div class="titre">
+        <a href="{{ path('app_apprenants') }}" class="btn1">Voir Plus</a>
+    </div>
+</section>
+
+
+{% endblock %}
+
+

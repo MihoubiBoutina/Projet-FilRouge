@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{# Titre de la page (utilisé dans la balise <title>) #}
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+<section class="formateurs-page">
+    <h1>Inscription</h1>
+
+    {# MESSAGES DE SUCCÈS #}
+    {# Affichage des messages flash de type "success"
+    après une inscription réussie #}
+    {% for message in app.flashes('success') %}
+        <p style="padding:12px;border:1px solid #2a4963;border-radius:10px;">
+        {{ message }}
+        </p>
+    {% endfor %}
+
+    {# FORMULAIRE D’INSCRIPTION #}
+    {# Le formulaire envoie les données en POST vers la route app_inscription #}
+    <form method="post" action="{{ path('app_inscription') }}" style="max-width:520px;">
+        <div style="margin:14px 0;">
+            {# Champ Nom #}
+            <label for="nom"><strong>Nom</strong></label><br>
+            {# Champ texte pour le nom
+            La valeur est conservée en cas d’erreur #}
+            <input id="nom" name="nom" value="{{ data.nom }}" required style="width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;">
+            {# Affichage du message d’erreur lié au champ nom #}
+            {% if errors['[nom]'] is defined %}
+                <small style="color:#b00020;">{{ errors['[nom]']|first }}</small>
+            {% endif %}
+        </div>
+
+        {# Champ Prénom #}
+        <div style="margin:14px 0;">
+            <label for="prenom"><strong>Prénom</strong></label><br>
+            <input id="prenom" name="prenom" value="{{ data.prenom }}" required style="width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;">
+            {% if errors['[prenom]'] is defined %}
+            <small style="color:#b00020;">{{ errors['[prenom]']|first }}</small>
+            {% endif %}
+        </div>
+
+        {# Champ Email #}
+        <div style="margin:14px 0;">
+            <label for="email"><strong>Email</strong></label><br>
+            <input id="email" name="email" type="email" value="{{ data.email }}" required style="width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;">
+            {% if errors['[email]'] is defined %}
+            <small style="color:#b00020;">{{ errors['[email]']|first }}</small>
+            {% endif %}
+        </div>
+
+        {# Sélection du rôle #}
+        <div style="margin:14px 0;">
+            <label for="role"><strong>Je suis</strong></label><br>
+            {# Liste déroulante permettant de choisir le rôle #}
+            <select id="role" name="role" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;">
+                <option value="apprenant" {% if data.role == 'apprenant' %}selected{% endif %}>Apprenant</option>
+                <option value="formateur" {% if data.role == 'formateur' %}selected{% endif %}>Formateur</option>
+            </select>
+            {% if errors['[role]'] is defined %}
+            <small style="color:#b00020;">{{ errors['[role]']|first }}</small>
+            {% endif %}
+        </div>
+
+        {# Boutons d’action #}
+        <button class="btn1" type="submit">Valider</button>
+        {# Lien vers la page d’inscription (ou liste des inscrits si prévu) #}
+        <a class="btn2" href="{{ path('app_inscription') }}">Voir les inscriptions</a>
+    </form>
+</section>
+{% endblock %}
+
+
+
+
+

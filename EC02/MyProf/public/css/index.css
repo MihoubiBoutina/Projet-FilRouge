@@ -1,0 +1,841 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    font-family: "roboto", sans-serif;
+    scroll-behavior: smooth;
+}
+
+html, body{
+    height: 100%;
+}
+
+p {
+    font-weight: 300;
+    color: #111;
+}
+
+/* LAYOUT (Sticky Footer) */
+
+body{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding-top: 80px; /* tu l’as déjà */
+}
+
+main{
+    flex: 1;
+}
+
+
+
+/* HEADER / NAVBAR (Unique) */
+.site-header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    background: #fcd3a7;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    z-index: 1000;
+}
+
+.logo{
+    color: #111;
+    font-weight: bold;
+    font-size: 2em;
+    text-decoration: none;
+}
+
+.logo span{ 
+    color:#fb911f; 
+}
+
+.navbar{
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    list-style: none;
+    margin-left: auto;
+}
+
+.navbar a{
+    color: #111;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.navbar a:hover{
+    color:#fb911f;
+    border-bottom: 2px solid #fb911f;
+}
+
+.btn-inscription{
+    padding: 10px 16px;
+    background: #fb911f;
+    border-radius: 8px;
+    color: #fff !important;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+/* Burger caché desktop */
+.burger{
+    display: none;
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #111;
+    cursor: pointer;
+    margin-left: 16px;
+}
+
+/* SECTIONS */
+section {
+    padding: 100px;
+}
+
+/* TITRES (landing) */
+
+.titre {
+    margin-top: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.titre-text {
+    color: #000;
+    font-size: 2em;
+    font-weight: 300;
+    text-transform: capitalize;
+}
+
+.titre-text span {
+    color: #fb911f;
+    font-size: 1.5em;
+    font-weight: 700;
+}
+
+
+/* BANNIERE */
+.banniere {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url(../image/home.jpeg);
+    background-size: cover;
+}
+
+.banniere .contenue {
+    max-width: 70%;
+    text-align: center;
+}
+
+.banniere .contenue h2 {
+    color: #fff;
+    font-size: 3em;
+    text-transform: capitalize;
+}
+
+.banniere p:nth-child(2) {
+    color: #fff;
+    font-size: 1.2em;
+}
+
+/* BOUTONS */
+.btn1 {
+    font-size: 1em;
+    color: #fff;
+    background: #fb911f;
+    padding: 10px 20px;
+    display: inline-block;
+    margin-top: 20px;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 2px;
+    transition: 0.5s;
+    margin-left: 10px;
+}
+
+.btn2 {
+    font-size: 1em;
+    color: #fff;
+    background: #2a4963;
+    padding: 10px 20px;
+    display: inline-block;
+    margin-top: 20px;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 2px;
+    transition: 0.5s;
+    margin-left: 10px;
+}
+
+.btn1:hover {
+    letter-spacing: 4px;
+}
+
+/* A PROPOS (ROW) */
+.row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.row .col50 {
+    width: 48%;
+}
+
+.row .col50 h2{
+    margin-bottom: 20px;
+}
+
+.row .col50 img {
+    height: 450px;
+    width: 600px;
+}
+
+
+/* FORMATEURS (Page + Grid) */
+.formateurs-page {
+    padding: 40px 32px;
+}
+
+.formateurs-page h1 {
+    margin-top: 30px;
+    font-size: 32px;
+}
+
+.formateurs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+    margin-top: 40px;
+}
+
+.formateur-card{
+    background: #fff;
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    transition: transform 0.2s ease;
+}
+
+.formateur-card:hover{
+    transform: translateY(-4px);
+}
+
+.formateur-card img{
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 12px;
+}
+
+.formateur-card h3{
+    margin: 8px 0 4px;
+    font-size: 18px;
+}
+
+.formateur-card p{
+    color: #666;
+    font-size: 14px;
+}
+
+
+header.site-header,
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    height: 80px;              /* ✅ hauteur fixe */
+    padding: 0 24px;           /* ✅ plus de padding vertical */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background: #fcd3a7;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    z-index: 1000;
+}
+
+
+.logo {
+    color: #111;
+    font-weight: bold;
+    font-size: 2em;
+    text-decoration: none;
+}
+
+.logo span {
+    color: #fb911f;
+}
+
+.navbar {
+    display: flex;
+    position: relative;
+}
+
+.navbar li {
+    list-style: none;
+}
+
+.navbar a {
+    color: #111;
+    text-decoration: none;
+    margin-left: 30px;
+    font-weight: 700;
+}
+
+.btn-inscription {
+    padding: 10px 20px;
+    background: #fb911f;
+    margin-top: -10px;
+    text-transform: uppercase;
+}
+
+.btn-inscription:hover {
+    background: #d87710;
+    transition: ease-out;
+}
+
+header .navbar li a:hover {
+    color: #fb911f;
+    border-bottom: 2px solid #fb911f;
+}
+
+
+/* ===== BURGER ICON (Font Awesome) ===== */
+.burger {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #111; /* adapte si header clair */
+    cursor: pointer;
+}
+
+/* Message confimaration d'enregistrement */
+.flash {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 14px 18px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    opacity: 1;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* état caché */
+.flash.hide {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+}
+
+.flash-success {
+    background: #e6f4ea;
+    color: #1e7e34;
+    border: 1px solid #b7e0c2;
+}
+
+.flash-error {
+    background: #fdecea;
+    color: #b42318;
+    border: 1px solid #f5c2c7;
+}
+
+/* ===== GRID FORMATEURS ===== */
+
+
+.nosProf{
+    padding-top: 40px;
+}
+
+.nosProf .compte{
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+/* Carte */
+.nosProf .box{
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+.nosProf .box:hover{
+    transform: translateY(-4px);
+}
+
+/* Image */
+.nosProf .imBox{
+    width: 100%;
+    height: 200px;           /* ✅ hauteur contrôlée */
+    background: #eee;
+}
+
+.nosProf .imBox img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;       /* image bien cadrée */
+    object-position: center top; /* évite têtes coupées */
+    display: block;
+}
+
+/* Texte */
+.nosProf .text{
+    padding: 14px;
+    text-align: center;
+}
+
+.nosProf .text h3{
+    font-size: 16px;
+    font-weight: 700;
+    color: #111;
+    margin: 0;
+}
+
+
+/* TEMOIGNAGES (Landing) */
+.temoignage{
+    margin-top: -100px;
+}
+
+.temoignage .compte {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.temoignage .compte .box{
+    width: 340px;
+    background: #fcd3a7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 15px;
+    padding: 20px;
+}
+
+
+.temoignage .compte .box .imBox {
+    width: 80px;
+    height: 80px;
+    border-radius: 50px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.temoignage .compte .box .imBox img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.temoignage .compte .box .text {
+    text-align: center;
+    color: #111;
+    font-style: italic;
+}
+
+.temoignage .compte .box .text h3 {
+    color: #2a4963;
+    margin-top: 20px;
+    font-size: 1em;
+    font-weight: 600;
+}
+
+/* AVIS APPRENANTS (Cartes) */
+.avis-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+    margin-top: 40px;
+}
+
+.avis-card{
+    background: #fff;
+    border-radius: 18px;
+    padding: 24px 20px;
+    text-align: center;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.avis-card:hover{
+    transform: translateY(-6px);
+    box-shadow: 0 14px 36px rgba(0,0,0,0.12);
+}
+
+
+/* Photo */
+.avis-avatar{
+    width: 90px;
+    height: 90px;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.avis-avatar img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* Nom */
+.avis-nom{
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #111;
+}
+
+/* Étoiles */
+.avis-stars{
+    margin-bottom: 12px;
+}
+
+.avis-stars i{
+    color: #fb911f;
+    margin: 0 2px;
+    font-size: 14px;
+}
+
+/* Message */
+.avis-message{
+    font-style: italic;
+    color: #333;
+    line-height: 1.5;
+}
+
+.user-info {
+    font-weight: 700;
+    color: #111;
+    padding: 8px 12px;
+}
+
+.user-info small {
+    font-weight: 400;
+    font-size: 0.85em;
+    color: #2a4963;
+}
+
+/* ===== FORMULAIRE ATELIER ===== */
+.atelier-form{
+    max-width: 720px;
+    margin: 30px auto;
+    background: #fff;
+    padding: 28px 26px;
+    border-radius: 16px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+    display: grid;
+    gap: 14px;
+}
+
+/* Labels */
+.atelier-form label{
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-weight: 700;
+    color: #111;
+    text-align: left;
+}
+
+/* Inputs / textarea */
+.atelier-form input,
+.atelier-form textarea{
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 15px;
+    background: #fff;
+    transition: 0.2s ease;
+}
+
+/* Focus */
+.atelier-form input:focus,
+.atelier-form textarea:focus{
+    outline: none;
+    border-color: #fb911f;
+    box-shadow: 0 0 0 3px rgba(251,145,31,0.20);
+}
+
+/* Textarea */
+.atelier-form textarea{
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* Erreurs */
+.atelier-form .form-error{
+    margin-top: 2px;
+    color: #c1121f;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Zone boutons */
+.atelier-form .form-actions{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+/* Boutons (sans casser tes .btn1 / .btn2 globaux) */
+.atelier-form .btn1,
+.atelier-form .btn2{
+    margin-left: 0; /* tu as margin-left:10px globalement */
+}
+
+
+/*  FOOTER */
+.site-footer {
+    background: #fcd3a7;
+    color: #111;
+    padding: 50px 32px 20px;
+    margin-top: 60px;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 32px;
+}
+
+.footer-logo {
+    font-size: 24px;
+    font-weight: 800;
+    text-decoration: none;
+    color: #111;
+}
+
+.footer-logo span {
+    color: #ff7a00;
+}
+
+.footer-brand p{
+    margin-top: 12px;
+    line-height: 1.6;
+    color: rgba(14, 13, 13, 0.8);
+}
+
+.footer-links h4{
+    margin-bottom: 12px;
+    font-size: 16px;
+}
+
+.footer-links ul{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links ul li{
+    margin-bottom: 8px;
+}
+
+.footer-links a{
+    color: rgba(4, 4, 4, 0.85);
+    text-decoration: none;
+}
+
+.footer-links a:hover{
+    color: #ff7a00;
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 14px;
+    color: rgba(11, 11, 11, 0.6);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    padding-top: 16px;
+}
+
+
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px){
+    
+    section {
+        padding: 60px 24px;
+    }
+
+    .titre{
+    margin-top: 30px;
+    }
+
+
+/* A propos : 2 colonnes -> 1 colonne */
+    .row {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .row .col50 {
+        width: 100%;
+    }
+
+    .row .col50 img {
+        width: 100%;
+        height: auto;
+        max-height: 420px;
+        object-fit: cover;
+    }
+
+
+    /* Banniere : texte plus petit */
+    .banniere .contenue {
+        max-width: 90%;
+    }
+    .banniere .contenue h2 {
+        font-size: 2.3em;
+    }
+
+     /* header stable */
+    .site-header{
+    height: 80px;                 /* on garde une hauteur fixe */
+    padding: 0 16px;
+    justify-content: space-between;
+    }
+
+  /* on affiche le burger dès tablette */
+    .burger{
+    display: block;
+    }
+
+  /* on cache la navbar en ligne */
+    .navbar{
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fcd3a7;
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.10);
+    }
+
+  /* menu ouvert */
+    .site-header.menu-open .navbar{
+    display: flex;
+    }
+
+  /* liens dans le menu */
+    .navbar li{
+    width: 100%;
+    }
+
+    .navbar a{
+    display: block;
+    width: 100%;
+    margin-left: 0;               /* IMPORTANT : tu avais margin-left:30px ailleurs */
+    padding: 10px 0;
+    }
+
+  /* le bouton inscription prend toute la largeur */
+    .btn-inscription{
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    margin-top: 6px;
+    }
+
+}
+
+@media (max-width: 768px){
+    .burger{ 
+        display:block; 
+    }
+
+
+/* Menu dropdown */
+    .navbar{
+        display:none;
+        position:absolute;
+        top: 80%;
+        left:0;
+        right:0;
+        background:#fcd3a7;
+        flex-direction: column;
+        padding: 14px 18px;
+        gap: 12px;
+    }
+
+    .site-header.menu-open .navbar{
+        display:flex;
+    }
+
+    section{
+    padding: 50px 18px;
+    } 
+
+    .btn1, .btn2{
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .site-footer{
+        padding: 36px 18px 16px;
+    }
+
+}
+
+@media(max-width: 480px){
+    .banniere .contenue h2 {
+        font-size: 1.8em;
+    }
+
+    p {
+        font-size: 0.95em;
+    }
+
+    .nosProf .imBox{
+    height: 180px; /* plus compact sur petit écran */
+    }
+
+    /* Responsive formulaire */
+@media (max-width: 600px){
+    .atelier-form{
+        padding: 20px 16px;
+    }
+
+    .atelier-form .btn1,
+    .atelier-form .btn2{
+        width: 100%;
+        text-align: center;
+    }
+}
+}
+

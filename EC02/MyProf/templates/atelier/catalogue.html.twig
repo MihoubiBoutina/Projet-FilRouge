@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+{% block title %}Ateliers{% endblock %}
+
+{% block body %}
+<section class="formateurs-page">
+  <div class="titre">
+    <h2 class="titre-text"><span>Nos</span> ateliers</h2>
+  </div>
+
+  {# LISTE DES ATELIERS #}
+
+  {# Message affiché s’il n’y a aucun atelier disponible #}
+  {% if ateliers is empty %}
+    <p style="text-align:center; margin-top:20px;">Aucun atelier disponible pour le moment.</p>
+  {# Sinon, affichage des ateliers sous forme de cartes #}
+  {% else %}
+    <div class="formateurs-grid">
+      {# Boucle Twig pour parcourir tous les ateliers #}
+      {% for a in ateliers %}
+        <article class="formateur-card">
+          <h3>{{ a.titre }}</h3>
+          <p>{{ a.description }}</p>
+
+          <p><strong>Formateur :</strong> {{ a.formateur_nom }}</p>
+          <p><strong>Date :</strong> {{ a.date }} à {{ a.heure }}</p>
+          <p><strong>Durée :</strong> {{ a.duree }} min — <strong>Places :</strong> {{ a.places }}</p>
+        </article>
+      {% endfor %}
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

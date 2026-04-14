@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos formaturs{% endblock %}
+
+{% block body %}
+
+
+<section class="formateurs-page">
+    {# Titre principal de la page #}
+    <h1>Nos formateurs</h1>
+
+        {# Grille d’affichage des formateurs #}
+        <div class="formateurs-grid">
+        {# Boucle Twig permettant d’afficher chaque formateur
+        transmis depuis le contrôleur #}
+            {% for formateur in formateurs %}
+                <div class="formateur-card">
+                    {# Boucle Twig permettant d’afficher chaque formateur
+                    transmis depuis le contrôleur #}
+                    <img src="{{ asset('image/' ~ formateur.photo) }}" alt="{{ formateur.nom }}" loading="lazy">
+                    {# Nom du formateur #}
+                    <h3>{{ formateur.nom }}</h3>
+                    {# Spécialité du formateur #}
+                    <p>{{ formateur.specialite }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+{% endblock %}
