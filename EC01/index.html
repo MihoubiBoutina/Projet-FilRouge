@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+    <link rel="stylesheet" href="index.css" >
+    <link rel="preconnect" href="https://fonts.googleapis.com" >
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <title>MyProf</title>
+</head>
+    <body>
+        <header class="site-header">
+            <a href="#" class="logo"><span>My</span>Prof</a>
+
+            <div class="menutoggle" onclick=toggleMenu()>
+                <span aria-hidden="true"></span>
+            </div>
+            
+            <ul class="navbar">
+                <li><a href="#banniere" onclick="toggleMenu();" aria-label="Bouton Accueil - Aller sur la page accueil">Accueil</a></li>
+                <li><a href="#apropos" onclick="toggleMenu();" aria-label="Bouton A propos - Aller sur la page a propos">A propos</a></li>
+                <li><a href="#nosProf" onclick="toggleMenu();" aria-label="Bouton Nos prof - Aller sur la page nos prof">Nos profs</a></li>
+                <li><a href="#nosValeur" onclick="toggleMenu();" aria-label="Bouton nos valeurs - Aller sur la page nos valeur">Nos valeurs</a></li>
+                <li><a href="#temoignage" onclick="toggleMenu();" aria-label="Bouton témoignage - Aller sur la page témoignage">Témoignage</a></li>
+                <li><a href="#contact" onclick="toggleMenu();" aria-label="Bouton contact - Aller sur la page contact">Contact</a></li>
+                <li>
+                <button class="btn-inscription" onclick="onClickButtonInscriptionApprenant()">Inscription</button>
+                </li>
+            </ul>
+        </header>
+        <main>
+            <!-- cet section est l'accueil du site -->
+            <section class="banniere" id="banniere">
+        <div class="contenue">
+            <h2>Trouvez le professeur parfait</h2>
+            <p>La plateforme qui relie des formateurs passionnés et des apprenants motivés autour d’ateliers de formation interactifs, pour apprendre, partager et évoluer ensemble</p>
+            <a href="#" class="btn1">Réservation</a>
+            <a href="#" class="btn2">Inscription</a>
+            
+        </div>
+        </section>
+
+        <!-- cet section je fais découvrire qui nous somme au utilisateur -->
+        <section class="apropos" id="apropos">
+        <div class="row">
+            <div class="col50">
+            <h2 class="titre-text"><span>A</span> Propos De Nous</h2>
+            <p>
+                Nous avons créé cette plateforme pour rapprocher des formateurs qualifiés et passionnés avec des apprenants désireux d’évoluer et de renforcer leurs compétences. Nous mettons en avant des ateliers de formation interactifs, conçus pour allier théorie et pratique, et adaptés aux besoins réels du marché. Notre objectif est de favoriser un environnement d’apprentissage collaboratif, accessible et humain, où le partage des connaissances, l’échange d’expériences et l’accompagnement personnalisé permettent à chacun de progresser à son rythme et de transformer l’apprentissage en une véritable opportunité d’évolution professionnelle et personnelle.
+            </p>
+            </div>
+            <div class="col50">
+            <div class="img">
+                <img src="./image/prof5.jpg" alt="image">
+            </div>
+            </div>
+        </div>
+        </section>
+
+        <!-- cet section décrit nos valeur -->
+        <section class="nosValeur" id="nosValeur">
+        <div class="row">
+            <div class="col50">
+            <h2 class="titre-text"><span>Nos</span> Valeur</h2>
+            <p>
+                Nos valeurs reposent sur une vision humaine et collaborative de l’apprentissage. Nous croyons en la transmission du savoir à travers l’échange, la pratique et l’accompagnement personnalisé. En mettant en relation des formateurs qualifiés et passionnés avec des apprenants motivés, nous favorisons un environnement accessible, bienveillant et orienté vers les besoins réels du marché. Le partage des connaissances, l’engagement et l’adaptabilité sont au cœur de notre démarche, afin de permettre à chacun de progresser à son rythme et de transformer l’apprentissage en une véritable opportunité d’évolution professionnelle et personnelle.
+            </p>
+            </div>
+        </div>
+        </section>
+
+        <!-- les utilisateur vont voire différent profs -->
+        <section class="nosProf" id="nosProf">
+            <div class="titre">
+                <h2 class="titre-text"><span>Nos</span> Prof</h2>
+                <p>35 millions de professeurs, pour vous aidez</p>
+            </div>
+            <div class="compte">
+                <div class="box">
+                <div class="imBox">
+                    <img src="./image/prof8.jpg" alt="image du professeur" loading="lazy">
+                </div>
+                <div class="text">
+                    <h3>Alice G</h3>
+                </div>
+                </div>
+
+                <div class="box">
+                <div class="imBox">
+                    <img src="./image/prof.jpeg" alt="image du professeur" loading="lazy">
+                </div>
+                <div class="text">
+                    <h3>Ayoub F</h3>
+                </div>
+                </div>
+
+                <div class="box">
+                <div class="imBox">
+                    <img src="./image/prof9.jpg" alt="image du professeur" loading="lazy">
+                </div>
+                <div class="text">
+                    <h3>Anais O</h3>
+                </div>
+                </div>
+
+                <div class="box">
+                <div class="imBox">
+                    <img src="./image/prof3.jpg" alt="image du professeur" loading="lazy">
+                </div>
+                <div class="text">
+                    <h3>Christien C</h3>
+                </div>
+                </div>
+
+                <div class="box">
+                <div class="imBox">
+                    <img src="./image/prof4.jpg" alt="image du professeur" loading="lazy">
+                </div>
+                <div class="text">
+                    <h3>Guillaume K</h3>
+                </div>
+                </div>
+
+                <div class="box">
+                <div class="imBox">
+                    <img src="./image/prof11.jpg" alt="image du professeur" loading="lazy">
+                </div>
+                <div class="text">
+                    <h3>Manu T</h3>
+                </div>
+                </div>
+
+                <div class="box">
+                <div class="imBox">
+                    <img src="./image/prof5.jpg" alt="image du professeur" loading="lazy">
+                </div>
+                <div class="text">
+                    <h3>Fabienne N</h3>
+                </div>
+                </div>
+
+                <div class="box">
+                <div class="imBox">
+                    <img src="./image/prof1.jpeg" alt="image du professeur" loading="lazy">
+                </div>
+                <div class="text">
+                    <h3>Daniel V</h3>
+                </div>
+                </div>
+
+                <div class="box">
+                <div class="imBox">
+                    <img src="./image/prof10.jpg" alt="image du professeur" loading="lazy">
+                </div>
+                <div class="text">
+                    <h3>Lucie J</h3>
+                </div>
+                </div>
+            </div>
+            <div class="titre">
+                <a href="#" class="btn1">Voir Plus</a>
+            </div>
+        </section>
+
+        <!-- section de temoignage des apprenants pour laisse des commantaire -->
+        <section class="temoignage" id="temoignage">
+            <div class="titre blanc">
+                <h2 class="titre-text"><span>Que</span> Disent Nos Aprenants</h2>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            </div>
+            <div class="compte">
+                <div class="box">
+                    <div class="imBox">
+                        <img src="./image/eleve4.jpeg" alt="image d'éléve" loading="lazy">
+                    </div>
+                    <div class="text">
+                        <p>Super plateforme, j'ai trouvé un prof rapidement.</p>
+                        <h3>Luca M</h3>
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="imBox">
+                        <img src="./image/eleve2.jpeg" alt="image d'éléve" loading="lazy">
+                    </div>
+                    <div class="text">
+                        <p>Bonne séance, mais le groupe était un peu nombreux pour poser des questions.</p>
+                        <h3>Laurine P</h3>
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="imBox">
+                        <img src="./image/eleve1.jpeg" alt="image d'éléve" loading="lazy">
+                    </div>
+                    <div class="text">
+                        <p>J’ai apprécié les corrections : précises mais encourageantes</p>
+                        <h3>Cecile L</h3>
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="imBox">
+                        <img src="./image/eleve.jpeg" alt="image d'éléve" loading="lazy">
+                    </div>
+                    <div class="text">
+                        <p>Cours clairs et très pédagogues.</p>
+                        <h3>Sylvie K</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="titre">
+                <a href="#" class="btn1">Voir Plus</a>
+            </div>
+        </section>
+
+        <!-- section pour nous contact si besoin -->
+        <section class="contact" id="contact">
+            <div class="titre noir">
+                <h2 class="titre-text"><span>C</span>ontact</h2>
+                <p>Qu’il pleuve ou qu’il neige nous serons disponibles pour vous aider. Nous vous répondons au plus vite.</p>
+            </div>
+            <div class="contactForm">
+                <h3>Envoyer un message</h3>
+                <div class="inputboite">
+                    <input type="text" placeholder="nom">
+                </div>
+                <div class="inputboite">
+                    <input type="text" placeholder="email">
+                </div>
+                <div class="inputboite">
+                    <textarea placeholder="message"></textarea>
+                </div>
+                <div class="inputboite">
+                    <input type="submit" value="Envoyer">
+                </div>
+            </div>
+        </section>
+
+        </main>
+
+        
+
+        <footer class="site-footer">
+    <div class="footer-container">
+        <div class="footer-brand">
+            <a href="#" class="footer-logo">
+                <span>My</span>Prof
+            </a>
+            <p>La plateforme qui relie des formateurs passionnés et des apprenants motivés.</p>
+        </div>
+        <div class="footer-links">
+            <h4>Navigation</h4>
+            <ul>
+                <li><a href="#banniere">Accueil</a></li>
+                <li><a href="#nosProf">Formateurs</a></li>
+                <li><a href="#temoignage">Apprenants</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h4>Informations</h4>
+            <ul>
+                <li><a href="#">Mentions légales</a></li>
+                <li><a href="#">Politique de confidentialité</a></li>
+                <li><a href="#">CGU</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <a href="#">© MyProf — Tous droits réservés</a> 
+    </div>
+</footer>
+
+
+    <section class="dialog-section">
+        <dialog class="dialog" id="dialog">
+            <div class="dialog-content">
+                <button class="dialog-close" onclick="closeDialog()" aria-label="Fermer le formulaire d'inscription"></button>
+                <h2>Inscription apprenant et formateur</h2>
+                <p>Noté vos information</p>
+                <form onsubmit="submitInscriptionBtn(event)">
+                    <label for="nom">Nom</label>
+                    <input type="text" id="nom" name="nom" required>
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                    <div class="dialog-buttons">
+                        <button type="button" onclick="closeDialog()">Annuler</button>
+                        <button type="submit">Incription</button>
+                    </div>
+                </form>
+            </div>
+        </dialog>
+    </section>
+
+        <script src="./index.js"></script>
+        
+    </body>
+    </html>

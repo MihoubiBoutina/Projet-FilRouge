@@ -1,0 +1,30 @@
+# Dependencies
+**/vendor/
+**/node_modules/
+**/var/cache/
+**/var/log/
+**/var/tmp/
+**/var/sessions/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Archives
+**/*.zip
+**/*.tar.gz
+**/*.gz
+**/*.rar
+**/*.7z
+
+# Local environment
+.env.local
+.env.dev.local
+.env.test.local
+.env.prod.local
+
+# Symfony specific
+/public/bundles/
+/var/
