@@ -1,0 +1,50 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+<div class="login-page">
+    <div class="login-card">
+        <div class="login-header">
+            <h2>Bon retour <span>parmi nous</span></h2>
+            <p>Connectez-vous pour accéder à vos ateliers</p>
+        </div>
+
+        <form method="post">
+            {% if error %}
+                <div class="alert-error">{{ error.messageKey is defined ? error.messageKey|trans(error.messageData, 'security') : error }}</div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="inputEmail">Email</label>
+                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus placeholder="exemple@mail.com">
+            </div>
+
+            <div class="form-group">
+                <label for="inputPassword">Mot de passe</label>
+                <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required placeholder="••••••••">
+
+                <div style="text-align: right; margin-top: 5px;">
+                    <a href="{{ path('app_password_forgot') }}" style="font-size: 0.85rem; color: #666; text-decoration: none;">
+                        Mot de passe oublié ?
+                    </a>
+                </div>
+                {% if errors['[password]'] is defined %}
+                    <small style="color:#b00020;">{{ errors['[password]']|first }}</small>
+                {% endif %}
+            </div>
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            <button class="btn-login" type="submit">
+                Se connecter
+            </button>
+            
+            <div class="login-footer">
+                <p>Pas encore de compte ? <a href="{{ path('app_inscription') }}">Inscrivez-vous</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

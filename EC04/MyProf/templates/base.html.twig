@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}MyProf{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet" href="{{ asset('css/index.css') }}">
+</head>
+<body>
+
+    {# Récupération de l'utilisateur stocké en session.
+    La variable sera utilisée pour savoir si l'utilisateur
+    est connecté et pour adapter l'affichage du menu. #}
+    {% set user = app.session.get('user') %}
+
+
+    {# HEADER #}
+    <header class="site-header">
+
+    {# Logo du site avec lien vers la page d’accueil #}
+    <a href="{{ path('app_landing') }}" class="logo"><span>My</span>Prof</a>
+
+    {# Menu de navigation principal #}
+    <ul class="navbar">
+    {# --- LIENS COMMUNS --- #}
+    <li><a href="{{ path("app_landing")}}">Accueil</a></li>
+    <li><a href="{{ path('app_ateliers_catalogue') }}">Atelier</a></li>
+    <li><a href="{{ path('app_formateur_index') }}">Profs</a></li>
+    <li><a href="{{ path('app_landing') }}#nosValeur">Valeur</a></li>
+    <li><a href="{{ path('app_avis') }}#temoignage">Temoignage</a></li>
+    <li><a href="{{ path('app_apprenant_profil') }}#profil">Profil</a></li>
+
+    {# --- LOGIQUE D'AUTHENTIFICATION --- #}
+    {% if user %}
+        {# Affiché uniquement si CONNECTÉ #}
+        {% if user.role == 'formateur' %}
+            <li><a href="{{ path('app_ateliers_index') }}">Mes Ateliers</a></li>
+        {% endif %}
+
+        <li class="user-info">
+            <span>
+                {{ user.prenom|default('') }} {{ user.nom|default('Utilisateur') }}
+                <small>({{ user.role }})</small>
+            </span>
+        </li>
+        <li>
+            <a href="{{ path('app_logout') }}" class="btn-inscription">Déconnexion</a>
+        </li>
+    {% else %}
+        {# Affiché uniquement si DÉCONNECTÉ #}
+        <li><a href="{{ path('app_login')}}">Connexion</a></li>
+        <li>
+            <a href="{{ path('app_inscription') }}" class="btn-inscription">Inscription</a>
+        </li>
+    {% endif %}
+</ul>
+
+    {# Bouton menu burger pour la version mobile #}
+    <button class="burger" type="button" aria-label="Ouvrir le menu" aria-expanded="false">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+</header>
+{#  CONTENU PRINCIPAL #}
+<main>
+    {#  Affichage des messages flash (succès, erreur, etc.) #}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="flash flash-{{ label }}">{{ message }}</div>
+        {% endfor %}
+    {% endfor %}
+    {# Bloc dynamique qui sera remplacé par les vues enfants #}
+    {% block body %}{% endblock %}
+</main>
+
+{# FOOTER #}
+<footer class="site-footer">
+    <div class="footer-container">
+
+        {# Présentation de la marque #}
+        <div class="footer-brand">
+            <a href="{{ path('app_landing') }}" class="footer-logo">
+                <span>My</span>Prof
+            </a>
+            <p>
+                La plateforme qui relie des formateurs passionnés
+                et des apprenants motivés.
+            </p>
+        </div>
+
+        {# Liens de navigation du footer #}
+        <div class="footer-links">
+            <h4>Navigation</h4>
+            <ul>
+                <li><a href="{{ path('app_landing') }}">Accueil</a></li>
+                <li><a href="{{ path('app_formateur_index') }}">Formateurs</a></li>
+                <li><a href="{{ path('app_avis') }}">Apprenants</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </div>
+
+        {# Liens de navigation du footer #}
+        <div class="footer-links">
+            <h4>Informations</h4>
+            <ul>
+                <li><a href="#">Mentions légales</a></li>
+                <li><a href="#">Politique de confidentialité</a></li>
+                <li><a href="#">CGU</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        © {{ "now"|date("Y") }} MyProf — Tous droits réservés
+    </div>
+</footer>
+
+    <script src="{{ asset('js/index.js') }}"></script>
+</body>
+</html>

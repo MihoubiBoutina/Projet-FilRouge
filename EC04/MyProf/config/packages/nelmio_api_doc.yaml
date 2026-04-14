@@ -1,0 +1,13 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: MyProf API
+            description: API REST pour la gestion des ateliers et avis
+            version: 1.0.0
+        servers:
+            - url: http://127.0.0.1:8000
+              description: Serveur local
+    areas:
+        path_patterns:
+            - ^/api(?!/doc)
+

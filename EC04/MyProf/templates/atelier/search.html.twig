@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rechercher des ateliers{% endblock %}
+
+{% block body %}
+<section class="ateliers-page">
+    <div class="titre">
+        <h2 class="titre-text">Rechercher des <span>Ateliers</span></h2>
+        <p>Filtrez les ateliers selon vos critères</p>
+    </div>
+
+    {# FORMULAIRE DE RECHERCHE #}
+    <div class="search-form-container" style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+        <form method="GET" action="{{ path('app_ateliers_search') }}" class="search-form">
+            <div class="form-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                {# Recherche par titre #}
+                <label style="display: flex; flex-direction: column;">
+                    <span style="font-weight: bold; margin-bottom: 5px;">Titre</span>
+                    <input type="text" name="titre" value="{{ params.titre }}" placeholder="Rechercher par titre..." style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </label>
+
+                {# Filtrer par durée #}
+                <label style="display: flex; flex-direction: column;">
+                    <span style="font-weight: bold; margin-bottom: 5px;">Durée (minutes)</span>
+                    <input type="number" name="duree" value="{{ params.duree }}" placeholder="ex: 60" min="0" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </label>
+
+                {# Filtrer par places minimum #}
+                <label style="display: flex; flex-direction: column;">
+                    <span style="font-weight: bold; margin-bottom: 5px;">Places minimum</span>
+                    <input type="number" name="places_min" value="{{ params.places_min }}" placeholder="ex: 5" min="0" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </label>
+
+                {# Tri #}
+                <label style="display: flex; flex-direction: column;">
+                    <span style="font-weight: bold; margin-bottom: 5px;">Trier par</span>
+                    <select name="sort" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                        <option value="date" {% if params.sort == 'date' %}selected{% endif %}>Date</option>
+                        <option value="titre" {% if params.sort == 'titre' %}selected{% endif %}>Titre</option>
+                        <option value="place" {% if params.sort == 'place' %}selected{% endif %}>Nombre de places</option>
+                    </select>
+                </label>
+
+                {# Ordre (ASC/DESC) #}
+                <label style="display: flex; flex-direction: column;">
+                    <span style="font-weight: bold; margin-bottom: 5px;">Ordre</span>
+                    <select name="order" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                        <option value="ASC" {% if params.order == 'ASC' %}selected{% endif %}>Croissant</option>
+                        <option value="DESC" {% if params.order == 'DESC' %}selected{% endif %}>Décroissant</option>
+                    </select>
+                </label>
+
+                {# Boutons #}
+                <div style="display: flex; gap: 10px; align-items: flex-end;">
+                    <button type="submit" class="btn1" style="flex: 1;">Rechercher</button>
+                    <a href="{{ path('app_ateliers_search') }}" class="btn2" style="flex: 1; text-align: center; text-decoration: none;">Réinitialiser</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {# RÉSULTATS #}
+    <div class="search-results">
+        {% if ateliers|length > 0 %}
+            <p style="text-align: center; margin-bottom: 20px; font-weight: bold;">
+                📊 <strong>{{ ateliers|length }} atelier(s) trouvé(s)</strong>
+            </p>
+
+            <div class="ateliers-grid">
+                {% for atelier in ateliers %}
+                    <article class="atelier-card">
+                        <div class="card-header-visual">
+                            <span class="badge-formateur">Par {{ atelier.formateur.nom }}</span>
+                        </div>
+
+                        <div class="atelier-content">
+                            <h3 class="atelier-title">{{ atelier.titre }}</h3>
+                            <p class="atelier-desc">{{ atelier.description|slice(0, 90) }}...</p>
+
+                            <div class="atelier-meta-info">
+                                <span><i class="fas fa-calendar"></i> {{ atelier.startAt|date('d/m/Y à H:i') }}</span>
+                                <span><i class="fas fa-clock"></i> {{ atelier.dureeHeure }} min</span>
+                                <span><i class="fas fa-users"></i> {{ atelier.place }} places</span>
+                            </div>
+                        </div>
+
+                        <div class="atelier-footer-actions">
+                            <a href="{{ path('app_atelier_inscription', {id: atelier.id}) }}" class="btn-inscription-card">
+                                S'inscrire
+                            </a>
+
+                            <form class="avis-quick-form" action="{{ path('app_atelier_add_avis', {id: atelier.id}) }}" method="post">
+                                <select name="note" class="select-note">
+                                    <option value="5">5 ★</option>
+                                    <option value="4">4 ★</option>
+                                    <option value="3">3 ★</option>
+                                    <option value="2">2 ★</option>
+                                    <option value="1">1 ★</option>
+                                </select>
+                                <input type="text" name="commentaire" placeholder="Avis rapide..." required>
+                                <button type="submit" class="btn-mini-send">OK</button>
+                            </form>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div style="text-align: center; padding: 40px; background: #f9f9f9; border-radius: 8px;">
+                <p style="font-size: 18px; color: #666;">❌ Aucun atelier ne correspond à vos critères de recherche.</p>
+                <p style="color: #999; margin-top: 10px;">Essayez de modifier vos filtres.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un atelier{% endblock %}
+
+{% block body %}
+<section class="formateurs-page">
+    <div class="titre">
+        <h2 class="titre-text"><span>Créer</span> un atelier</h2>
+        <p>Remplissez les informations ci-dessous.</p>
+    </div>
+
+    {# Affichage des messages Flash (Succès/Erreur) #}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}" style="text-align:center; margin-bottom:15px; color: {{ label == 'error' ? 'red' : 'green' }};">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <form method="post" class="atelier-form">
+        {# Champ Titre #}
+        <label>
+            Titre
+            <input type="text" name="titre" value="{{ data.titre }}" required>
+            {% if errors.titre is defined %}
+                <small class="form-error" style="color:red; display:block;">{{ errors.titre }}</small>
+            {% endif %}
+        </label>
+
+        {# Champ Description #}
+        <label>
+            Description
+            <textarea name="description" rows="5" required>{{ data.description }}</textarea>
+            {% if errors.description is defined %}
+                <small class="form-error" style="color:red; display:block;">{{ errors.description }}</small>
+            {% endif %}
+        </label>
+
+        {# Champ Date #}
+        <label>
+            Date (AAAA-MM-JJ)
+            <input type="date" name="date" value="{{ data.date }}" required>
+            {% if errors.date is defined %}
+                <small class="form-error" style="color:red; display:block;">{{ errors.date }}</small>
+            {% endif %}
+        </label>
+
+        {# Champ Heure #}
+        <label>
+            Heure (HH:MM)
+            <input type="time" name="heure" value="{{ data.heure }}" required>
+            {% if errors.heure is defined %}
+                <small class="form-error" style="color:red; display:block;">{{ errors.heure }}</small>
+            {% endif %}
+        </label>
+
+        <label>
+            Durée (minutes)
+            <input type="number" name="duree" min="15" max="480" value="{{ data.duree }}" required>
+            {% if errors.duree is defined %}
+                <small class="form-error" style="color:red; display:block;">{{ errors.duree }}</small>
+            {% endif %}
+        </label>
+
+        {# Champ Nombre de places #}
+        <label>
+            Places
+            <input type="number" name="places" min="1" max="100" value="{{ data.places }}" required>
+            {% if errors.places is defined %}
+                <small class="form-error" style="color:red; display:block;">{{ errors.places }}</small>
+            {% endif %}
+        </label>
+
+        <div style="display:flex; gap:10px; justify-content:center; margin-top:12px;">
+            <button class="btn1" type="submit">Enregistrer</button>
+            <a class="btn2" href="{{ path('app_formateur_index') }}">Retour</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
