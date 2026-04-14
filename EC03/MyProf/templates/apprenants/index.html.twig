@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Avis des apprenants{% endblock %}
+
+{% block body %}
+<section class="apprenants-page">
+    <div class="titre">
+        <h2 class="titre-text"><span>Avis</span> des apprenants</h2>
+        <p>Découvrez ce que pensent nos apprenants</p>
+    </div>
+
+    <div class="avis-grid">
+    {% for a in avis %}
+        <article class="avis-card">
+            <div class="avis-avatar">
+                {# Note : Si vous n'avez pas encore de relation MySQL/MongoDB pour le nom/photo, 
+                on affiche l'ID de l'apprenant en attendant #}
+                <img src="{{ asset(a.photo) }}" alt="Photo de {{ a.nom }}>
+            </div>
+
+            <h3 class="avis-nom" style="text-align: center; margin-top: 10px;>{{ a.nom }}</h3>
+
+            {# 3. Affichage de la note (étoiles) #}
+            <div class="avis-stars">
+                {% for i in 1..5 %}
+                    {% if i <= a.note %}
+                        <i class="fa-solid fa-star"></i>
+                    {% else %}
+                        <i class="fa-regular fa-star"></i>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <p class="avis-message" style="text-align: center; padding: 0 15px; font-style: italic;">
+                “{{ a.message }}” {# CHANGÉ : message -> commentaire #}
+            </p>
+            
+            <div style="text-align: center; font-size: 0.8em; color: #888; margin-bottom: 15px;">
+                <small>Posté le : {{ a.date ? a.date|date('d/m/Y') : 'Récemment' }}</small>
+            </div>
+        </article>
+    {% else %}
+        <p>Aucun avis pour le moment.</p>
+    {% endfor %}
+    </div>
+</section>
+{% endblock %}

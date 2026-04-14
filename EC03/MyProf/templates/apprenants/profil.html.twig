@@ -1,0 +1,49 @@
+    {% extends 'base.html.twig' %}
+
+    {% block title %}Compléter mon profil{% endblock %}
+
+    {% block body %}
+    <section class="profil-section">
+    <div class="profil-card">
+        <h1 class="profil-title">Compléter mon profil</h1>
+
+        {{ form_start(form, {'attr': {'class': 'profil-form'}}) }}
+
+        <div class="profil-grid">
+            <div class="profil-field">
+            {{ form_label(form.nom) }}
+            {{ form_widget(form.nom, {'attr': {'class': 'profil-input'}}) }}
+            {{ form_errors(form.nom) }}
+            </div>
+
+            <div class="profil-field">
+            {{ form_label(form.prenom) }}
+            {{ form_widget(form.prenom, {'attr': {'class': 'profil-input'}}) }}
+            {{ form_errors(form.prenom) }}
+            </div>
+        </div>
+
+        <div class="profil-field">
+            {{ form_label(form.niveau) }}
+            {{ form_widget(form.niveau, {'attr': {'class': 'profil-input'}}) }}
+            {{ form_errors(form.niveau) }}
+        </div>
+
+        <div class="profil-field">
+            {{ form_label(form.objectif) }}
+            {{ form_widget(form.objectif, {'attr': {'class': 'profil-textarea'}}) }}
+            {{ form_errors(form.objectif) }}
+        </div>
+
+        <div class="profil-field">
+            {{ form_label(form.disponibilite) }}
+            {{ form_widget(form.disponibilite, {'attr': {'class': 'profil-input'}}) }}
+            {{ form_errors(form.disponibilite) }}
+        </div>
+
+        <button class="profil-btn" type="submit">Enregistrer</button>
+
+        {{ form_end(form) }}
+    </div>
+    </section>
+    {% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+{% block title %}Ateliers{% endblock %}
+
+{% block body %}
+<section class="ateliers-page">
+    <div class="titre">
+        <h2 class="titre-text">Nos <span>Ateliers</span></h2>
+        <p>Découvrez les sessions animées par nos experts</p>
+    </div>
+
+    <div class="ateliers-grid">
+            {% for atelier in ateliers %}
+                <article class="atelier-card">
+                    <div class="card-header-visual">
+                        <span class="badge-formateur">Par {{ atelier.formateur.nom }}</span>
+                    </div>
+
+                    <div class="atelier-content">
+                        <h3 class="atelier-title">{{ atelier.titre }}</h3>
+                        <p class="atelier-desc">{{ atelier.description|slice(0, 90) }}...</p>
+
+                        <div class="atelier-meta-info">
+                            <span><i class="fas fa-calendar"></i> {{ atelier.startAt|date('d/m/Y') }}</span>
+                            <span><i class="fas fa-users"></i> {{ atelier.place }} places</span>
+                        </div>
+                    </div>
+
+                    <div class="atelier-footer-actions">
+                        <a href="{{ path('app_atelier_inscription', {id: atelier.id}) }}" class="btn-inscription-card">
+                            S'inscrire
+                        </a>
+
+                        <form class="avis-quick-form" action="{{ path('app_atelier_add_avis', {id: atelier.id}) }}" method="post">
+                            <select name="note" class="select-note">
+                                <option value="5">5 ★</option>
+                                <option value="4">4 ★</option>
+                                <option value="3">3 ★</option>
+                                <option value="2">2 ★</option>
+                                <option value="1">1 ★</option>
+                            </select>
+                            <input type="text" name="commentaire" placeholder="Avis rapide..." required>
+                            <button type="submit" class="btn-mini-send">OK</button>
+                        </form>
+                    </div>
+                </article>
+            {% else %}
+                <p class="empty-msg">Aucun atelier n'est proposé pour le moment.</p>
+            {% endfor %}
+    </div>
+</section>
+{% endblock %}
