@@ -3,13 +3,14 @@
 namespace App\Tests\Functional\Api;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class AtelierApiFunctionalTest extends WebTestCase
 {
     /**
      * Test 1 : GET /api/ateliers retourne 200 et header JSON
      * 
-     * @test
+    #[Test]
      */
     public function testGetAteliersReturns200WithJsonHeader(): void
     {
@@ -26,7 +27,7 @@ class AtelierApiFunctionalTest extends WebTestCase
     /**
      * Test 2 : GET /api/ateliers retourne un JSON valide
      * 
-     * @test
+    #[Test]
      */
     public function testGetAteliersReturnsValidJsonStructure(): void
     {
@@ -43,7 +44,7 @@ class AtelierApiFunctionalTest extends WebTestCase
     /**
      * Test 3 : GET /api/search avec paramètres valides
      * 
-     * @test
+    #[Test]
      */
     public function testGetSearchWithValidParameters(): void
     {
@@ -66,7 +67,7 @@ class AtelierApiFunctionalTest extends WebTestCase
     /**
      * Test 4 : GET /api/search avec paramètres invalides
      * 
-     * @test
+    #[Test]
      */
     public function testGetSearchWithInvalidSortParameter(): void
     {
@@ -85,7 +86,7 @@ class AtelierApiFunctionalTest extends WebTestCase
     /**
      * Test 5 : GET /api/avis retourne 200
      * 
-     * @test
+    #[Test]
      */
     public function testGetAvisReturns200(): void
     {
@@ -99,7 +100,7 @@ class AtelierApiFunctionalTest extends WebTestCase
     /**
      * Test 6 : GET /api/avis avec filtrage par note
      * 
-     * @test
+    #[Test]
      */
     public function testGetAvisFilterByNote(): void
     {

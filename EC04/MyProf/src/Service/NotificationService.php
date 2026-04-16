@@ -5,12 +5,8 @@ namespace App\Service;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
-interface NotificationServiceInterface
-{
-    public function sendEmailNotification(string $email, string $subject, string $body): void;
-}
 
-class EmailNotificationService implements NotificationServiceInterface
+class NotificationService implements NotificationServiceInterface
 {
     public function __construct(private MailerInterface $mailer)
     {

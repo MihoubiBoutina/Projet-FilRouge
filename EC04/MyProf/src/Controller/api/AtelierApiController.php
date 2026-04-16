@@ -9,6 +9,8 @@ use App\Repository\UserFormateurRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ORM\EntityManagerInterface;
 use OpenApi\Attributes as OA;
+use App\Service\GeminiMatchingService;
+use App\Service\NotificationServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +28,7 @@ class AtelierApiController extends AbstractController
                 description: 'Liste des ateliers',
                 content: new OA\JsonContent(
                     properties: [
-                        'ateliers' => new OA\Property(type: 'array', items: new OA\Items())
+                        'ateliers' => new OA\Property(property: 'ateliers', type: 'array', items: new OA\Items())
                     ]
                 )
             )
@@ -239,12 +241,12 @@ class AtelierApiController extends AbstractController
             content: new OA\JsonContent(
                 required: ['titre', 'description', 'dureeHeure', 'place', 'formateurId', 'startAt'],
                 properties: [
-                    'titre' => new OA\Property(type: 'string'),
-                    'description' => new OA\Property(type: 'string'),
-                    'dureeHeure' => new OA\Property(type: 'integer'),
-                    'place' => new OA\Property(type: 'integer'),
-                    'formateurId' => new OA\Property(type: 'integer'),
-                    'startAt' => new OA\Property(type: 'string', format: 'date-time'),
+                    'titre' => new OA\Property(property: 'titre', type: 'string'),
+                    'description' => new OA\Property(property: 'description', type: 'string'),
+                    'dureeHeure' => new OA\Property(property: 'dureeHeure', type: 'integer'),
+                    'place' => new OA\Property(property: 'place', type: 'integer'),
+                    'formateurId' => new OA\Property(property: 'formateurId', type: 'integer'),
+                    'startAt' => new OA\Property(property: 'startAt', type: 'string', format: 'date-time'),
                 ]
             )
         ),
@@ -257,7 +259,8 @@ class AtelierApiController extends AbstractController
     public function createAtelier(
         Request $request,
         AtelierRepository $atelierRepo,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        NotificationServiceInterface $notificationService
     ): JsonResponse {
         $data = json_decode($request->getContent(), true);
 
@@ -275,6 +278,13 @@ class AtelierApiController extends AbstractController
         }
 
         // Pour la démo, on retourne juste l'atelier créé
+        // Envoyer une notification (simulée pour le test)
+        $notificationService->sendEmailNotification(
+            'formateur@example.com',
+            'Nouvel atelier créé',
+            'L\'atelier ' . $data['titre'] . ' a été créé.'
+        );
+
         return $this->json([
             'id' => 1,
             'titre' => $data['titre'],
@@ -295,10 +305,10 @@ class AtelierApiController extends AbstractController
             content: new OA\JsonContent(
                 required: ['commentaire', 'note', 'apprenantId', 'atelierId'],
                 properties: [
-                    'commentaire' => new OA\Property(type: 'string'),
-                    'note' => new OA\Property(type: 'integer', minimum: 1, maximum: 5),
-                    'apprenantId' => new OA\Property(type: 'integer'),
-                    'atelierId' => new OA\Property(type: 'integer'),
+                    'commentaire' => new OA\Property(property: 'commentaire', type: 'string'),
+                    'note' => new OA\Property(property: 'note', type: 'integer', minimum: 1, maximum: 5),
+                    'apprenantId' => new OA\Property(property: 'apprenantId', type: 'integer'),
+                    'atelierId' => new OA\Property(property: 'atelierId', type: 'integer'),
                 ]
             )
         ),
@@ -308,7 +318,7 @@ class AtelierApiController extends AbstractController
             new OA\Response(response: 422, description: 'Données invalides'),
         ]
     )]
-    public function createAvis(Request $request, DocumentManager $dm): JsonResponse
+    public function createAvis(Request $request, DocumentManager $dm, NotificationServiceInterface $notificationService): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
@@ -331,6 +341,13 @@ class AtelierApiController extends AbstractController
         }
 
         // Pour la démo, on retourne juste l'avis créé
+        // Envoyer une notification au formateur (simulée pour le test)
+        $notificationService->sendEmailNotification(
+            'formateur@example.com',
+            'Nouvel avis reçu',
+            'Un nouvel avis a été laissé sur un atelier.'
+        );
+
         return $this->json([
             'id' => uniqid(),
             'commentaire' => $data['commentaire'],
@@ -341,4 +358,48 @@ class AtelierApiController extends AbstractController
         ], 201);
     }
 
+
+    #[Route('/match', name: 'api_ateliers_match', methods: ['GET', 'POST'])]
+    #[OA\Post(
+        description: 'Recherche les meilleurs ateliers pour un profil via l\'IA Gemini',
+        tags: ['IA'],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['profil', 'ateliers'],
+                properties: [
+                    'profil' => new OA\Property(property: 'profil', type: 'string'),
+                    'ateliers' => new OA\Property(property: 'ateliers', type: 'array', items: new OA\Items())
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: 'Recommandations de l\'IA'),
+            new OA\Response(response: 400, description: 'Payload invalide')
+        ]
+    )]
+    public function match(Request $request, GeminiMatchingService $gemini): JsonResponse
+    {
+        if ($request->isMethod('POST')) {
+            $data = json_decode($request->getContent(), true) ?? [];
+        } else {
+            // Mode GET : on utilise des données de test par défaut pour faciliter l'essai
+            $data = [
+                'profil' => $request->query->get('profil', 'Je suis un développeur passionné par PHP et je veux apprendre l\'IA'),
+                'ateliers' => [
+                    ['id' => 1, 'titre' => 'PHP Avancé', 'description' => 'Maîtriser les Design Patterns'],
+                    ['id' => 2, 'titre' => 'Introduction à l\'IA', 'description' => 'Les bases du Machine Learning'],
+                    ['id' => 3, 'titre' => 'Cuisine Italienne', 'description' => 'Apprendre à faire des pâtes']
+                ]
+            ];
+        }
+
+        if (empty($data['profil']) || empty($data['ateliers'])) {
+            return $this->json(['error' => 'Missing profil or ateliers'], 400);
+        }
+
+        $result = $gemini->getBestMatches($data['profil'], $data['ateliers']);
+
+        return new JsonResponse($result, 200, [], true);
+    }
 }

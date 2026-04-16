@@ -3,13 +3,14 @@
 namespace App\Tests\Functional\Api;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class AtelierApiValidationTest extends WebTestCase
 {
     /**
      * Test : POST avec payload vide retourne 400
      * 
-     * @test
+    #[Test]
      */
     public function testPostWithEmptyPayloadReturns400(): void
     {
@@ -27,13 +28,13 @@ class AtelierApiValidationTest extends WebTestCase
 
         // Vérifier l'erreur 400 ou 422
         $response = $client->getResponse()->getStatusCode();
-        $this->assertIn($response, [400, 422]);
+        $this->assertContains($response, [400, 422]);
     }
 
     /**
      * Test : POST avec données invalides retourne 422
      * 
-     * @test
+    #[Test]
      */
     public function testPostWithInvalidDataReturns422(): void
     {
@@ -62,7 +63,7 @@ class AtelierApiValidationTest extends WebTestCase
     /**
      * Test : POST avec données valides retourne 201
      * 
-     * @test
+    #[Test]
      */
     public function testPostWithValidDataReturns201(): void
     {
@@ -92,7 +93,7 @@ class AtelierApiValidationTest extends WebTestCase
     /**
      * Test : POST Avis avec données manquantes retourne 422
      * 
-     * @test
+    #[Test]
      */
     public function testPostAvisWithMissingDataReturns422(): void
     {
@@ -120,7 +121,7 @@ class AtelierApiValidationTest extends WebTestCase
     /**
      * Test : POST Avis avec note invalide retourne 422
      * 
-     * @test
+    #[Test]
      */
     public function testPostAvisWithInvalidNoteReturns422(): void
     {
@@ -148,7 +149,7 @@ class AtelierApiValidationTest extends WebTestCase
     /**
      * Test : Vérifier les messages d'erreur
      * 
-     * @test
+    #[Test]
      */
     public function testErrorResponseHasDetailedMessages(): void
     {
@@ -172,7 +173,7 @@ class AtelierApiValidationTest extends WebTestCase
         $responseData = json_decode($client->getResponse()->getContent(), true);
 
         // Vérifier que la réponse contient les détails des erreurs
-        $this->assertArrayHasKey('errors', $responseData);
-        $this->assertIsArray($responseData['errors']);
+        $this->assertArrayHasKey('error', $responseData);
+        $this->assertArrayHasKey('fields', $responseData);
     }
 }

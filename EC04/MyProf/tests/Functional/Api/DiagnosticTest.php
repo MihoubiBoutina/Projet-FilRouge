@@ -3,13 +3,14 @@
 namespace App\Tests\Functional\Api;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class DiagnosticTest extends WebTestCase
 {
     /**
      * Test simple pour vérifier que le client HTTP fonctionne
      * 
-     * @test
+    #[Test]
      */
     public function testClientCanMakeRequest(): void
     {
@@ -23,7 +24,7 @@ class DiagnosticTest extends WebTestCase
     /**
      * Test : GET /api/ateliers existe et retourne 200
      * 
-     * @test
+    #[Test]
      */
     public function testApiAteliersEndpointExists(): void
     {
@@ -36,7 +37,7 @@ class DiagnosticTest extends WebTestCase
     /**
      * Test : GET /api/search existe
      * 
-     * @test
+    #[Test]
      */
     public function testApiSearchEndpointExists(): void
     {
@@ -49,7 +50,7 @@ class DiagnosticTest extends WebTestCase
     /**
      * Test : POST /api/ateliers existe et retourne 201 avec données valides
      * 
-     * @test
+    #[Test]
      */
     public function testPostApiAteliersEndpointExists(): void
     {

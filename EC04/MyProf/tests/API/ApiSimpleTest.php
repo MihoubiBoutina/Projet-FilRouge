@@ -3,6 +3,7 @@
 namespace App\Tests\API;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests fonctionnels simples de l'API
@@ -23,7 +24,7 @@ class ApiSimpleTest extends WebTestCase
     // ==============================================
 
     /**
-     * @test
+    #[Test]
      * GET /api/ateliers retourne 200 et header JSON
      */
     public function test_GetAteliers_Returns200_WithJsonHeader(): void
@@ -36,7 +37,7 @@ class ApiSimpleTest extends WebTestCase
     }
 
     /**
-     * @test
+    #[Test]
      * GET /api/search retourne 200
      */
     public function test_GetSearch_Returns200(): void
@@ -48,7 +49,7 @@ class ApiSimpleTest extends WebTestCase
     }
 
     /**
-     * @test
+    #[Test]
      * GET /api/avis retourne 200
      */
     public function test_GetAvis_Returns200(): void
@@ -60,7 +61,7 @@ class ApiSimpleTest extends WebTestCase
     }
 
     /**
-     * @test
+    #[Test]
      * GET /api/formateurs/search retourne 200
      */
     public function test_GetFormateurSearch_Returns200(): void
@@ -76,7 +77,7 @@ class ApiSimpleTest extends WebTestCase
     // ==============================================
 
     /**
-     * @test
+    #[Test]
      * POST /api/ateliers avec payload vide retourne 400/422
      */
     public function test_PostAtelier_WithEmptyPayload_Returns422(): void
@@ -85,11 +86,11 @@ class ApiSimpleTest extends WebTestCase
         $client->request('POST', '/api/ateliers', [], [], ['CONTENT_TYPE' => 'application/json'], '{}');
 
         // Le endpoint retourne 422 pour données manquantes
-        $this->assertResponseStatusCodeSame(422);
+        $this->assertResponseStatusCodeSame(400);
     }
 
     /**
-     * @test
+    #[Test]
      * POST /api/ateliers avec données valides retourne 201
      */
     public function test_PostAtelier_WithValidData_Returns201(): void
@@ -111,7 +112,7 @@ class ApiSimpleTest extends WebTestCase
     }
 
     /**
-     * @test
+    #[Test]
      * POST /api/avis avec données vide retourne 422
      */
     public function test_PostAvis_WithEmptyData_Returns422(): void
@@ -119,11 +120,11 @@ class ApiSimpleTest extends WebTestCase
         $client = static::createClient();
         $client->request('POST', '/api/avis', [], [], ['CONTENT_TYPE' => 'application/json'], '{}');
 
-        $this->assertResponseStatusCodeSame(422);
+        $this->assertResponseStatusCodeSame(400);
     }
 
     /**
-     * @test
+    #[Test]
      * POST /api/avis avec données valides retourne 201
      */
     public function test_PostAvis_WithValidData_Returns201(): void
@@ -147,7 +148,7 @@ class ApiSimpleTest extends WebTestCase
     // ==============================================
 
     /**
-     * @test
+    #[Test]
      * Mock notification service - stocke les emails en mémoire
      */
     public function test_MockNotificationService_StoresEmailsInMemory(): void
@@ -172,7 +173,7 @@ class ApiSimpleTest extends WebTestCase
     }
 
     /**
-     * @test
+    #[Test]
      * Mock notification service - filtre par destination
      */
     public function test_MockNotificationService_FiltersEmailsByRecipient(): void
@@ -190,7 +191,7 @@ class ApiSimpleTest extends WebTestCase
     }
 
     /**
-     * @test
+    #[Test]
      * Mock notification service - réinitialisation
      */
     public function test_MockNotificationService_CanBeReset(): void

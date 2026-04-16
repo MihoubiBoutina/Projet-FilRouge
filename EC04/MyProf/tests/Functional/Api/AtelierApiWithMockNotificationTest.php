@@ -4,6 +4,7 @@ namespace App\Tests\Functional\Api;
 
 use App\Tests\Mock\MockNotificationService;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
  * Tests d'intégration avec MockNotificationService
@@ -28,7 +29,7 @@ class AtelierApiWithMockNotificationTest extends WebTestCase
     /**
      * Test : Vérifier que MockNotificationService stocke les emails
      * 
-     * @test
+    #[Test]
      */
     public function testMockNotificationServiceStoresEmails(): void
     {
@@ -58,7 +59,7 @@ class AtelierApiWithMockNotificationTest extends WebTestCase
     /**
      * Test : Vérifier les emails envoyés à une adresse spécifique
      * 
-     * @test
+    #[Test]
      */
     public function testMockNotificationServiceFiltersEmailsByRecipient(): void
     {
@@ -92,7 +93,7 @@ class AtelierApiWithMockNotificationTest extends WebTestCase
     /**
      * Test : Vérifier qu'un email a été envoyé à une adresse
      * 
-     * @test
+    #[Test]
      */
     public function testMockNotificationServiceVerifiesEmailWasSent(): void
     {
@@ -116,7 +117,7 @@ class AtelierApiWithMockNotificationTest extends WebTestCase
     /**
      * Test : Réinitialiser l'historique des emails
      * 
-     * @test
+    #[Test]
      */
     public function testMockNotificationServiceCanBeReset(): void
     {
@@ -138,7 +139,7 @@ class AtelierApiWithMockNotificationTest extends WebTestCase
     /**
      * Test : Affichage du débogage des emails
      * 
-     * @test
+    #[Test]
      */
     public function testMockNotificationServiceDebugOutput(): void
     {
@@ -159,7 +160,7 @@ class AtelierApiWithMockNotificationTest extends WebTestCase
     /**
      * Test : Pattern de test typique avec WebTestCase et mock notification
      * 
-     * @test
+    #[Test]
      */
     public function testTypicalWebTestCasePatternWithMockNotification(): void
     {
@@ -200,7 +201,7 @@ class AtelierApiWithMockNotificationTest extends WebTestCase
     /**
      * Test : Vérification que les mocks ne polluent pas l'état global
      * 
-     * @test
+    #[Test]
      */
     public function testMockNotificationServiceIsIsolated(): void
     {

@@ -2,16 +2,17 @@
 
 namespace App\Tests\Functional\Api;
 
-use App\Service\EmailNotificationService;
+use App\Service\NotificationService;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Mailer\MailerInterface;
+use PHPUnit\Framework\Attributes\Test;
 
 class AtelierApiNotificationTest extends WebTestCase
 {
     /**
      * Test : POST Atelier envoie une notification email (mockée)
      * 
-     * @test
+    #[Test]
      */
     public function testPostAtelierSendsEmailNotificationWithMock(): void
     {
@@ -23,7 +24,7 @@ class AtelierApiNotificationTest extends WebTestCase
             ->method('send');
 
         // Créer le service avec le mock
-        $notificationService = new EmailNotificationService($mailerMock);
+        $notificationService = new NotificationService($mailerMock);
 
         // Appeler la méthode
         $notificationService->sendEmailNotification(
@@ -39,7 +40,7 @@ class AtelierApiNotificationTest extends WebTestCase
     /**
      * Test : POST Atelier ne doit pas envoyer 2 emails
      * 
-     * @test
+    #[Test]
      */
     public function testPostAtelierDoesNotSendMultipleEmails(): void
     {
@@ -49,7 +50,7 @@ class AtelierApiNotificationTest extends WebTestCase
         $mailerMock->expects($this->once())
             ->method('send');
 
-        $notificationService = new EmailNotificationService($mailerMock);
+        $notificationService = new NotificationService($mailerMock);
         $notificationService->sendEmailNotification(
             'apprenant@example.com',
             'Nouvel atelier',
@@ -63,7 +64,7 @@ class AtelierApiNotificationTest extends WebTestCase
     /**
      * Test : Vérifier que le mailer n'est pas appelé en développement
      * 
-     * @test
+    #[Test]
      */
     public function testMailerIsNotCalledInTestEnvironment(): void
     {
@@ -73,7 +74,7 @@ class AtelierApiNotificationTest extends WebTestCase
         $mailerMock->expects($this->never())
             ->method('send');
 
-        $notificationService = new EmailNotificationService($mailerMock);
+        $notificationService = new NotificationService($mailerMock);
 
         // Ne pas appeler sendEmailNotification()
         // Le test passe si send() n'est jamais appelé
@@ -83,7 +84,7 @@ class AtelierApiNotificationTest extends WebTestCase
     /**
      * Test : POST Atelier avec notification email
      * 
-     * @test
+    #[Test]
      */
     public function testPostAtelierWithEmailNotification(): void
     {
@@ -124,7 +125,7 @@ class AtelierApiNotificationTest extends WebTestCase
     /**
      * Test : POST Avis avec notification au formateur
      * 
-     * @test
+    #[Test]
      */
     public function testPostAvisNotifiesTrainer(): void
     {
@@ -134,7 +135,7 @@ class AtelierApiNotificationTest extends WebTestCase
         $mailerMock->expects($this->atLeastOnce())
             ->method('send');
 
-        $notificationService = new EmailNotificationService($mailerMock);
+        $notificationService = new NotificationService($mailerMock);
 
         // Simuler l'envoi d'une notification au formateur
         $notificationService->sendEmailNotification(
@@ -149,7 +150,7 @@ class AtelierApiNotificationTest extends WebTestCase
     /**
      * Test : Vérifier que les emails ne sont pas envoyés lors des tests
      * 
-     * @test
+    #[Test]
      */
     public function testNoEmailsSentDuringTests(): void
     {
