@@ -42,7 +42,7 @@ class DiagnosticTest extends WebTestCase
     public function testApiSearchEndpointExists(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/api/search');
+        $client->request('GET', '/api/ateliers?titre=test');
 
         $this->assertResponseStatusCodeSame(200);
     }

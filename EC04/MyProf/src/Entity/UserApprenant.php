@@ -30,6 +30,8 @@ class UserApprenant
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $lastSessionId = null;
 
     #[ORM\Column(length: 50, nullable: true)]
 private ?string $niveau = null;
@@ -219,6 +221,18 @@ public function isProfilComplet(): bool
 public function setProfilComplet(bool $profilComplet): static
 {
     $this->profilComplet = $profilComplet;
+    return $this;
+}
+
+public function getLastSessionId(): ?string
+{
+    return $this->lastSessionId;
+}
+
+public function setLastSessionId(?string $lastSessionId): static
+{
+    $this->lastSessionId = $lastSessionId;
+
     return $this;
 }
 

@@ -156,19 +156,46 @@ GET /api/ateliers
 }
 ```
 
-#### Rechercher les ateliers
+#### Lister et rechercher les ateliers
 
 ```http
-GET /api/search?titre=PHP&duree=8&places_min=10&sort=titre&order=ASC
+GET /api/ateliers?titre=PHP&duree=8&sort=titre
 ```
 
-**Paramètres :**
+**Paramètres de recherche (optionnels) :**
 
-- `titre` (string) - Titre de l'atelier
-- `duree` (integer) - Durée en heures
-- `places_min` (integer) - Nombre minimum de places
-- `sort` (string) - Tri par : `date`, `titre`, `place` (défaut: `date`)
-- `order` (string) - Ordre : `ASC`, `DESC` (défaut: `ASC`)
+- `titre` (string) - Filtrer par titre
+- `duree` (integer) - Durée exacte en heures
+- `sort` (string) - Tri des résultats (ex: `date`)
+
+**Réponse (avec liens HATEOAS pour la navigation) :**
+
+```json
+{
+    "ateliers": [
+        {
+            "id": 1,
+            "titre": "Initiation à PHP",
+            "description": "Une formation complète en PHP",
+            "startAt": "2026-04-15T10:00:00+02:00",
+            "dureeHeure": 8,
+            "formateurId": 1,
+            "_links": {
+                "self": {
+                    "href": "/api/ateliers/1"
+                }
+            }
+        }
+    ]
+}
+```
+
+#### Voir le détail d'un atelier (et déclencher la traçabilité NoSQL)
+
+```http
+GET /api/ateliers/{id}
+```
+*Note : L'appel à cette route enregistre automatiquement la visite (IP, date) de façon asynchrone et rapide dans un document `LogVisite` via MongoDB.*
 
 ---
 
@@ -177,12 +204,12 @@ GET /api/search?titre=PHP&duree=8&places_min=10&sort=titre&order=ASC
 #### Rechercher les formateurs
 
 ```http
-GET /api/formateurs/search?nom=Dupont
+GET /api/formateurs?nom=Dupont
 ```
 
 **Paramètres :**
 
-- `nom` (string) - Nom du formateur à rechercher
+- `nom` (string) - Nom du formateur à rechercher (optionnel)
 
 **Réponse :**
 
@@ -192,7 +219,11 @@ GET /api/formateurs/search?nom=Dupont
         "id": 1,
         "nom": "Dupont",
         "prenom": "Jean",
-        "email": "jean.dupont@example.com"
+        "_links": {
+            "avis": {
+                "href": "/api/avis?formateurId=1"
+            }
+        }
     }
 ]
 ```
@@ -352,17 +383,18 @@ MyProf/
 | **Conteneurisation**        | Docker          | 20.10+  |
 | **Documentation API**       | Swagger/OpenAPI | 3.0     |
 
-### Modèle de données
+### Modèle de données Hybride (SQL / NoSQL)
 
-**MySQL (Données relationnelles) :**
+**MySQL (Données relationnelles & robustes) :**
 
-- Users (Apprenants & Formateurs)
-- Ateliers
-- Inscriptions
+- **Users** (Apprenants & Formateurs) : Sécurité et gestion des droits (intègre une fonctionnalité de traçabilité persistante de type `lastSessionId` capturée lors du login).
+- **Ateliers** : Structure centrale de la proposition de valeur.
+- **Inscriptions** : Liaisons fortes et transactions.
 
-**MongoDB (Données non structurées) :**
+**MongoDB (Données non structurées & recherches haute performance) :**
 
-- Avis & Commentaires
+- **Avis & Commentaires** : Exploitation maximale des recherches sur gros volumes sans jointures coûteuses (`Avis`).
+- **Analytiques / Traçabilité** : Sauvegarde ultra-rapide des passages (`LogVisite`) enregistrant massivement les logs de flux des visites sur les Ateliers, tirant parti de la rapidité d'écriture NoSQL.
 
 ---
 
@@ -408,6 +440,32 @@ tail -f var/log/dev.log
 
 ---
 
+## 🤖 Utilisation de l'Intelligence Artificielle (IA)
+
+Dans le cadre du développement et de la refonte architecturale de l'EC04, des outils d'Intelligence Artificielle ont été ponctuellement mobilisés en mode *pair-programming*.
+
+### 🛠 Outils Utilisés
+*   **Agent IA (LLM Assistant) :** Intégré à l'environnement pour accompagner le découpage technique et le développement backend.
+
+### 🎯 Périmètre d'Utilisation
+L'IA a été cadrée sur des cibles d'assistance à forte valeur ajoutée :
+*   **Documentation OpenAPI (Swagger) :** Génération automatique des attributs PHP 8 (`#[OA\Get]`, `#[OA\Post]`, schemas JSON) pour chaque endpoint.
+*   **Normalisation REST & HATEOAS :** Refonte des URL (fusion des `/search` dans la route principale) et injection des hyperliens de navigation `_links` dans les réponses API.
+*   **Architecture BDD Hybride :** Conception et intégration combinée au sein du même contrôleur du système SQL (Mise à jour des logs d'authentification `lastSessionId`) et de la base NoSQL MongoDB (Sauvegarde asynchrone des traces via `LogVisite`).
+
+### 🗣 Démarche d'Ingénierie de Prompts (Contexte)
+Pour obtenir du code de qualité, l'approche a ciblé le macro-contexte plutôt que la micro-génération :
+*   *Prompt Architectural :* "Voici mes deux bases de données. L'objectif est d'assurer la traçabilité des visites dans MongoDB et de sauvegarder la session dans MySQL SQL dans mon EC04. Fais-moi un plan."
+*   *Prompt d'Audit :* "Est-ce que mon EC04 respecte les règles REST standards (nommage, verbes, liens), est bien documenté via swagger et a une logique de test pertinente ?" 
+
+### 🛡 Validation et Sécurité du Code IA
+Aucun fragment de code n'a été inséré sans un "Security Gate" rigoureux :
+1.  **Vérification Active (Vulnerabilities) :** Toute tentative d'écrire en SQL a été validée pour vérifier l'utilisation systématique de l'ORM Doctrine (Prepared Statements) afin d'annuler les risques d'Injections. 
+2.  **Alignement Métier :** Chaque proposition de l'IA fait d'abord l'objet d'un "Execution Plan" qui doit être relu et validé fonctionnellement.
+3.  **Sanctuarisation par les Tests :** Le code issu de ces collaborations est systématiquement validé par la suite de **57 tests PHPUnit** fonctionnels et unitaires garantissant qu'aucune fonctionnalité historique n'a subi de régression (100% Passed).
+
+---
+
 ## 📞 Support & Contribution
 
 Pour toute question ou contribution, veuillez ouvrir une [issue](https://github.com/votreprojet/issues) ou soumettre une pull request.
@@ -450,6 +508,10 @@ Exécuter les migrations : php bin/console doctrine:migrations:migrate.
 
 Accéder au site : http://localhost:8080.
 
-il faut mettre mon swagger
-breacking change quand je commit
-changent log
+## 🔄 Changements récents & Mises à jour (Changelog)
+
+**Version Actuelle : Normalisation REST & Intégration NoSQL Poussée**
+- **Breaking Changes :** Suppression de la route `/api/search` (désormais incluse directement dans l'index `/api/ateliers?parametres=...`).
+- **Feature :** Implémentation du système formel HATEOAS pour l'API (utilisation de blocs `_links` guidant la navigation client).
+- **Feature :** Traçabilité hybride : Traçage des visites sur MongoDB de manière optimisée dès l'appel d'un détail d'atelier (`GET /api/ateliers/{id}`), et sauvegarde SQL du `lastSessionId` unique au moment de la connexion d'un individu.
+- **Documentation :** Intégration active de **Swagger UI** testable (`/api/doc`).

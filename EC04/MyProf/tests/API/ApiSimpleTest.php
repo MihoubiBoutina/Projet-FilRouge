@@ -43,7 +43,7 @@ class ApiSimpleTest extends WebTestCase
     public function test_GetSearch_Returns200(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/api/search');
+        $client->request('GET', '/api/ateliers?titre=test');
 
         $this->assertResponseStatusCodeSame(200);
     }
@@ -67,7 +67,7 @@ class ApiSimpleTest extends WebTestCase
     public function test_GetFormateurSearch_Returns200(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/api/formateurs/search');
+        $client->request('GET', '/api/formateurs?nom=test');
 
         $this->assertResponseStatusCodeSame(200);
     }
