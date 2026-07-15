@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Étape essentielle pour convertir le nom du dépôt en minuscules
+      # Convertit le nom du dépôt en minuscules pour éviter les erreurs Docker
       - name: Formater le nom du dépôt en minuscules
         id: string
         run: |
@@ -47,8 +47,7 @@ jobs:
       - name: Fabriquer l'image Symfony
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ./EC04/MyProf
           file: ./EC04/MyProf/Dockerfile
           push: false
-          # On utilise ici le nom converti en minuscules
           tags: ${{ env.REGISTRY }}/${{ steps.string.outputs.repo_lowercase }}:${{ github.sha }}
