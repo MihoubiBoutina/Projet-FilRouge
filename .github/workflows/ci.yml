@@ -28,6 +28,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Étape essentielle pour convertir le nom du dépôt en minuscules
+      - name: Formater le nom du dépôt en minuscules
+        id: string
+        run: |
+          echo "repo_lowercase=${GITHUB_REPOSITORY,,}" >> $GITHUB_OUTPUT
+
       - name: Installer Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -44,5 +50,5 @@ jobs:
           context: .
           file: ./EC04/MyProf/Dockerfile
           push: false
-          tags: ${{ env.REGISTRY }}/${{ github.repository }}:${{ github.sha }}
-          
+          # On utilise ici le nom converti en minuscules
+          tags: ${{ env.REGISTRY }}/${{ steps.string.outputs.repo_lowercase }}:${{ github.sha }}
