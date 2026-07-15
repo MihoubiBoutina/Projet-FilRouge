@@ -1,0 +1,57 @@
+name: CI — Symfony Build & Test
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  test:
+    name: PHPUnit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, pdo_mysql
+          coverage: none
+
+      - name: Installer les dépendances (Composer)
+        run: composer install --prefer-dist --no-progress
+
+      # Si vous avez des tests PHPUnit, GitHub les exécutera ici
+      - name: Run Tests
+        run: vendor/bin/phpunit --allow-risky
+
+  build:
+    name: Build Container Image
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Installer Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Connecter au registre de conteneurs GHA
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Simuler la fabrication de l'image Symfony
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false # Activé à true plus tard avec les secrets de production
+          tags: ${{ env.REGISTRY }}/${{ github.repository }}:${{ github.sha }}
