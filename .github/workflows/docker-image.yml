@@ -30,7 +30,7 @@ jobs:
 
       # Si vous avez des tests PHPUnit, GitHub les exécutera ici
       - name: Run Tests
-        run: vendor/bin/phpunit --allow-risky || true
+        run: vendor/bin/phpunit --allow-risky
 
   build:
     name: Build Container Image
@@ -49,9 +49,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Fabrication de l'image Symfony
+      - name: Simuler la fabrication de l'image Symfony
         uses: docker/build-push-action@v6
         with:
-          context: ${{ env.WORKING_DIRECTORY }}
+          context: .
           push: false # Activé à true plus tard avec les secrets de production
           tags: ${{ env.REGISTRY }}/${{ github.repository }}:${{ github.sha }}
