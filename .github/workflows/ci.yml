@@ -41,6 +41,8 @@ jobs:
       - name: Fabriquer l'image Symfony
         uses: docker/build-push-action@v6
         with:
-          context: ${{ env.WORKING_DIRECTORY }}
+          context: .
+          file: ./EC04/MyProf/Dockerfile
           push: false
           tags: ${{ env.REGISTRY }}/${{ github.repository }}:${{ github.sha }}
+          
