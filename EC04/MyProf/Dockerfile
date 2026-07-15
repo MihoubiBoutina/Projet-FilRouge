@@ -25,6 +25,9 @@ RUN apk add --no-cache \
 # On copie l'application optimisée depuis l'étape de préparation
 COPY --from=builder /app /var/www/html
 
+# Création du dossier var pour que Symfony puisse y écrire son cache et ses logs
+RUN mkdir -p /var/www/html/var
+
 # Configuration des permissions pour l'utilisateur non-root d'Alpine (www-data)
 RUN chown -R www-data:www-data /var/www/html/var
 
