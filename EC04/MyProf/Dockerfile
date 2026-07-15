@@ -15,7 +15,7 @@ COPY . .
 # On désactive la limite de mémoire pour éviter l'exit code 4 (OOM)
 ENV COMPOSER_MEMORY_LIMIT=-1
 
-# Installation de vos dépendances PHP (sur une seule ligne pour éviter les erreurs de syntaxe)
-RUN composer install --no-dev --optimize-autoloader --no-scripts --ignore-platform-reqs --no-interaction --no-audit --no-progress -v
+# Installation de vos dépendances PHP (sans l'option --no-audit)
+RUN composer install --no-dev --optimize-autoloader --no-scripts --ignore-platform-reqs --no-interaction --no-progress -v
 
 # --- Étape 2 : Production Runtime ---
