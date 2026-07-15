@@ -24,6 +24,6 @@ RUN composer install \
     --no-interaction \
     --no-audit \
     --no-progress
-
+    -v || (echo "=== ERREUR COMPOSER DETECTEE ===" && exit 1)
 # --- Étape 2 : Production Runtime ---
 # (Collez ici la suite de votre Dockerfile d'origine si vous en aviez une, sinon vous pouvez vous arrêter là)
