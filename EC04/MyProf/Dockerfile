@@ -15,8 +15,15 @@ COPY . .
 # On désactive la limite de mémoire pour éviter l'exit code 4 (OOM)
 ENV COMPOSER_MEMORY_LIMIT=-1
 
-# Installation des dépendances PHP
-RUN composer install --no-dev --optimize-autoloader --no-scripts --ignore-platform-reqs
+# Installation des dépendances PHP avec consommation RAM minimale
+RUN composer install \
+    --no-dev \
+    --optimize-autoloader \
+    --no-scripts \
+    --ignore-platform-reqs \
+    --no-interaction \
+    --no-audit \
+    --no-progress
 
 # --- Étape 2 : Production Runtime ---
 # (Collez ici la suite de votre Dockerfile d'origine si vous en aviez une, sinon vous pouvez vous arrêter là)
