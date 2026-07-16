@@ -1,4 +1,4 @@
-name: CI — Symfony Build & Test
+name: CD — Symfony Build, Test & Publish
 
 on:
   push:
@@ -21,14 +21,32 @@ jobs:
       - name: Force Success (Bypass)
         run: echo "Tests bypass" && exit 0
 
-  build:
-    name: Build Container Image
+  build-and-publish:
+    name: Build & Publish Container Image
     needs: test
     runs-on: ubuntu-latest
+    # On ajoute les permissions nécessaires pour écrire l'image dans le registre GitHub Packages (GHCR)
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       - uses: actions/checkout@v4
 
-      # Convertit le nom du dépôt en minuscules pour éviter les erreurs Docker
+      # 1. Configurer PHP sur la machine GitHub
+      - name: Configurer PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer:v2
+
+      # 2. Installer les dépendances directement sur la machine virtuelle
+      - name: Installer les dépendances Symfony (Vendor)
+        run: |
+          cd ${{ env.WORKING_DIRECTORY }}
+          composer install --no-dev --optimize-autoloader --no-scripts --ignore-platform-reqs --no-interaction --no-progress
+
+      # 3. Formater le nom du dépôt en minuscules
       - name: Formater le nom du dépôt en minuscules
         id: string
         run: |
@@ -44,10 +62,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Fabriquer l'image Symfony
+      # 4. Fabriquer et PUBLIER (push: true) l'image Symfony sur GHCR
+      - name: Fabriquer et Publier l'image Symfony
         uses: docker/build-push-action@v6
         with:
-          context: ./EC04/MyProf
-          file: ./EC04/MyProf/Dockerfile
-          push: false
-          tags: ${{ env.REGISTRY }}/${{ steps.string.outputs.repo_lowercase }}:${{ github.sha }}
+          context: ${{ env.WORKING_DIRECTORY }}
+          file: ${{ env.WORKING_DIRECTORY }}/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ steps.string.outputs.repo_lowercase }}:${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ steps.string.outputs.repo_lowercase }}:latest
