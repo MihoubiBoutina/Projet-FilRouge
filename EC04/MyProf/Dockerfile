@@ -11,23 +11,18 @@ FROM php:8.2-fpm-alpine
 
 WORKDIR /var/www/html
 
-# Installation des extensions PHP minimales requises pour faire tourner Symfony en production
-RUN apk add --no-cache \
-    icu-dev \
-    libzip-dev \
-    zip \
-    && docker-php-ext-install \
+# Installation des extensions PHP requises (y compris MongoDB de façon optimisée)
+# On utilise l'outil officiel "install-php-extensions" compatible à 100% avec Alpine
+ADD https://github.com/mlocati/docker-php-extensions/releases/latest/download/install-php-extensions /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/install-php-extensions && \
+    install-php-extensions \
     intl \
     opcache \
     pdo_mysql \
-    zip
+    zip \
+    mongodb
 
-    # Installation des dépendances pour compiler l'extension MongoDB
-RUN apt-get update && apt-get install -y \
-    libssl-dev \
-    && pecl install mongodb \
-    && docker-php-ext-enable mongodb
-    
 # On copie l'application optimisée depuis l'étape de préparation
 COPY --from=builder /app /var/www/html
 
