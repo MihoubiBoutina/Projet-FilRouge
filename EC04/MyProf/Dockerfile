@@ -22,6 +22,12 @@ RUN apk add --no-cache \
     pdo_mysql \
     zip
 
+    # Installation des dépendances pour compiler l'extension MongoDB
+RUN apt-get update && apt-get install -y \
+    libssl-dev \
+    && pecl install mongodb \
+    && docker-php-ext-enable mongodb
+    
 # On copie l'application optimisée depuis l'étape de préparation
 COPY --from=builder /app /var/www/html
 
