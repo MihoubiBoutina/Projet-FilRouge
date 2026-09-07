@@ -355,9 +355,12 @@ Le développement suit un workflow basé sur les branches :
 Le workflow [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) s'exécute sur chaque push vers `main` ou `develop`, ainsi que sur chaque Pull Request vers `main`. Il :
 
 - installe les dépendances avec Composer et PHP 8.2 ;
+- active l'extension PHP MongoDB `1.20.1`, compatible avec `composer.lock` ;
+- démarre un service MongoDB `mongo:7` pour les tests fonctionnels ;
+- prépare une base SQLite dédiée à l'environnement `test` ;
 - exécute la suite PHPUnit ;
 - construit l'image Docker ;
-- publie l'image dans GitHub Container Registry (`ghcr.io`) après un push hors Pull Request.
+- publie l'image dans GitHub Container Registry (`ghcr.io`) après un push hors Pull Request, avec un nom de dépôt normalisé en minuscules.
 
 Le badge en haut de ce document reflète le statut du dernier pipeline GitHub Actions.
 
@@ -554,6 +557,10 @@ Ce projet est sous licence **MIT**. Voir le fichier [LICENSE](LICENSE) pour plus
 - Traçabilité hybride SQL/NoSQL : `lastSessionId` côté SQL et `LogVisite` côté MongoDB.
 - Documentation Swagger disponible sur `/api/doc`.
 - Workflow GitHub Actions à la racine du dépôt : PHPUnit puis Build & Publish vers GHCR.
+- Extension MongoDB PHP explicitement installée en version `1.20.1` pour respecter les contraintes Composer.
+- Service MongoDB `mongo:7` ajouté aux tests GitHub Actions.
+- Nom de l'image GHCR normalisé en minuscules pour respecter les règles Docker.
+- Diagnostic de plateforme PHP ajouté avec `php --ini`, `php -m` et `php --ri mongodb`.
 - Configuration Symfony de test dans `config/packages/test/framework.yaml`.
 - Hook local versionné dans `tools/hooks/pre-commit` pour la syntaxe PHP et les tests unitaires.
 - Environnement PHPUnit isolé avec SQLite et transports Messenger synchrones dans `.env.test`.
@@ -564,7 +571,7 @@ Ce projet est sous licence **MIT**. Voir le fichier [LICENSE](LICENSE) pour plus
 - Hook `pre-commit` : validé, avec 6 tests unitaires et 10 assertions.
 - Suite PHPUnit complète : 57 tests, 99 assertions, tous passants.
 - Build Docker local : à exécuter avec Docker Desktop démarré.
-- Publication GHCR : réalisée par le job `Build & Publish` après réussite du job PHPUnit.
+- Publication GHCR : configurée dans le job `Build & Publish` après réussite du job PHPUnit.
 
 **Dernière mise à jour :** septembre 2026
 **Équipe :** Développement MyProf
