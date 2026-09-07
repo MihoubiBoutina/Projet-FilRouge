@@ -41,6 +41,9 @@ jobs:
       - name: Installer les dépendances (Composer)
         run: composer install --prefer-dist --no-progress
 
+      - name: Préparer la base SQLite de test
+        run: php bin/console doctrine:schema:create --env=test
+
       - name: Exécuter les tests PHPUnit
         run: vendor/bin/phpunit
 

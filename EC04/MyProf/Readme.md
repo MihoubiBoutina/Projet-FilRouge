@@ -531,7 +531,7 @@ Aucun fragment de code n'a été inséré sans un "Security Gate" rigoureux :
 
 1.  **Vérification Active (Vulnerabilities) :** Toute tentative d'écrire en SQL a été validée pour vérifier l'utilisation systématique de l'ORM Doctrine (Prepared Statements) afin d'annuler les risques d'Injections.
 2.  **Alignement Métier :** Chaque proposition de l'IA fait d'abord l'objet d'un "Execution Plan" qui doit être relu et validé fonctionnellement.
-3.  **Sanctuarisation par les Tests :** Le code issu de ces collaborations est contrôlé par PHPUnit et par le hook `pre-commit`. La suite contient 57 tests; les tests unitaires locaux passent, tandis que les tests fonctionnels nécessitent encore la correction de plusieurs routes API.
+3.  **Sanctuarisation par les Tests :** Le code issu de ces collaborations est contrôlé par PHPUnit et par le hook `pre-commit`. La suite complète contient 57 tests et passe avec 99 assertions.
 
 ---
 
@@ -550,17 +550,19 @@ Ce projet est sous licence **MIT**. Voir le fichier [LICENSE](LICENSE) pour plus
 ## 📝 Historique des modifications
 
 - Normalisation REST et intégration HATEOAS dans les réponses API.
+- Préfixe `/api` rétabli sur les routes REST et validation des endpoints GET/POST.
 - Traçabilité hybride SQL/NoSQL : `lastSessionId` côté SQL et `LogVisite` côté MongoDB.
 - Documentation Swagger disponible sur `/api/doc`.
 - Workflow GitHub Actions à la racine du dépôt : PHPUnit puis Build & Publish vers GHCR.
 - Configuration Symfony de test dans `config/packages/test/framework.yaml`.
 - Hook local versionné dans `tools/hooks/pre-commit` pour la syntaxe PHP et les tests unitaires.
+- Environnement PHPUnit isolé avec SQLite et transports Messenger synchrones dans `.env.test`.
 - Tags annotés publiés : `v1.0.0` et `v1.0.1`.
 
 ## ✅ État des contrôles
 
 - Hook `pre-commit` : validé, avec 6 tests unitaires et 10 assertions.
-- Suite PHPUnit complète : 57 tests recensés; des échecs fonctionnels restent à corriger avant un pipeline entièrement vert.
+- Suite PHPUnit complète : 57 tests, 99 assertions, tous passants.
 - Build Docker local : à exécuter avec Docker Desktop démarré.
 - Publication GHCR : réalisée par le job `Build & Publish` après réussite du job PHPUnit.
 

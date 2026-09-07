@@ -4,20 +4,17 @@ namespace App\Controller\api;
 
 use App\Document\Avis;
 use App\Document\LogVisite;
-use App\Entity\UserApprenant;
 use App\Repository\AtelierRepository;
 use App\Repository\UserFormateurRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ORM\EntityManagerInterface;
 use OpenApi\Attributes as OA;
-use App\Service\GeminiMatchingService;
 use App\Service\NotificationServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route(name: 'api_')]
+#[Route('/api', name: 'api_')]
 class AtelierApiController extends AbstractController
 {
     #[Route('/ateliers', name: 'ateliers_list', methods: ['GET'])]
@@ -46,7 +43,7 @@ class AtelierApiController extends AbstractController
         }
 
         if ($duree !== null) {
-            $ateliers = array_filter($ateliers, fn($a) => $a->getDureeHeure() === (int)$duree);
+            $ateliers = array_filter($ateliers, fn($a) => $a->getDureeHeure() === (int) $duree);
         }
 
         $data = array_map(fn($atelier) => [
@@ -125,7 +122,7 @@ class AtelierApiController extends AbstractController
     {
         // Exploitation de la force MongoDB (recherche rapide d'avis documentorienté)
         $formateurId = $request->query->get('formateurId');
-        
+
         $criteria = [];
         // Si le document Avis évoluait pour embarquer formateurId on filtrerait directement ici
         // $criteria = $formateurId ? ['formateurId' => (int)$formateurId] : [];
@@ -146,7 +143,8 @@ class AtelierApiController extends AbstractController
         description: 'Crée un nouvel atelier',
         tags: ['Ateliers']
     )]
-    public function createAtelier(Request $request, NotificationServiceInterface $notificationService): JsonResponse {
+    public function createAtelier(Request $request, NotificationServiceInterface $notificationService): JsonResponse
+    {
         $data = json_decode($request->getContent(), true);
 
         if (!$data) {
@@ -174,7 +172,8 @@ class AtelierApiController extends AbstractController
         description: 'Crée un nouvel avis',
         tags: ['Avis']
     )]
-    public function createAvis(Request $request): JsonResponse {
+    public function createAvis(Request $request): JsonResponse
+    {
         $data = json_decode($request->getContent(), true);
 
         if (!$data) {

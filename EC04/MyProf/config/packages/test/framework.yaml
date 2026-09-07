@@ -1,2 +1,6 @@
 framework:
     test: true
+    messenger:
+        transports:
+            async: 'sync://'
+            failed: 'sync://'
