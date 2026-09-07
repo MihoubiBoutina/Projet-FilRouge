@@ -1,5 +1,7 @@
 # 🎓 MyProf - Plateforme de Gestion des Ateliers
 
+[![CI/CD](https://github.com/MihoubiBoutina/Projet-FilRouge/actions/workflows/ci.yml/badge.svg)](https://github.com/MihoubiBoutina/Projet-FilRouge/actions/workflows/ci.yml)
+
 Une API REST robuste pour la gestion des ateliers de formation, des apprenants et des avis. Construite avec **Symfony 7**, **MySQL**, **MongoDB** et **Docker**.
 
 ---
@@ -11,6 +13,7 @@ Une API REST robuste pour la gestion des ateliers de formation, des apprenants e
 - [Démarrage](#-démarrage)
 - [Endpoints API](#-endpoints-api)
 - [Tests](#-tests)
+- [CI/CD & Qualité du code](#-cicd--qualité-du-code)
 - [Architecture](#-architecture)
 
 ---
@@ -195,7 +198,8 @@ GET /api/ateliers?titre=PHP&duree=8&sort=titre
 ```http
 GET /api/ateliers/{id}
 ```
-*Note : L'appel à cette route enregistre automatiquement la visite (IP, date) de façon asynchrone et rapide dans un document `LogVisite` via MongoDB.*
+
+_Note : L'appel à cette route enregistre automatiquement la visite (IP, date) de façon asynchrone et rapide dans un document `LogVisite` via MongoDB._
 
 ---
 
@@ -334,6 +338,54 @@ Consultez **[TESTING.md](TESTING.md)** pour la documentation complète :
 
 ---
 
+## 🔄 CI/CD & Qualité du code
+
+### Workflow Git
+
+Le développement suit un workflow basé sur les branches :
+
+1. Créer une branche dédiée depuis `main` (`feature/...`, `fix/...` ou `docs/...`).
+2. Développer et valider localement avec `vendor/bin/phpunit`.
+3. Ouvrir une Pull Request vers `main`.
+4. Attendre la revue de code et la réussite de la CI avant le merge.
+5. Fusionner dans `main`, puis créer un tag annoté pour une version livrée.
+
+### Contrôles automatisés
+
+Le workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) s'exécute sur chaque push vers `main` ou `develop`, ainsi que sur chaque Pull Request vers `main`. Il :
+
+- installe les dépendances avec Composer et PHP 8.2 ;
+- exécute la suite PHPUnit ;
+- construit l'image Docker ;
+- publie l'image dans GitHub Container Registry (`ghcr.io`) après un push hors Pull Request.
+
+Le badge en haut de ce document reflète le statut du dernier pipeline GitHub Actions.
+
+### Protection de la branche principale
+
+La branche `main` est protégée dans GitHub avec :
+
+- au moins **1 approbation de revue de code** avant le merge ;
+- l'exigence du contrôle GitHub Actions de CI réussi avant le merge ;
+- l'interdiction du merge si les contrôles obligatoires échouent.
+
+Ces règles garantissent que toute modification intégrée a été relue et validée automatiquement.
+
+### Tags de version
+
+Après le merge et la validation de `main`, créer puis pousser un tag annoté :
+
+```bash
+git checkout main
+git pull origin main
+git tag -a v1.0.0 -m "Release v1.0.0 REST & NoSQL"
+git push origin v1.0.0
+```
+
+Les tags suivent le versionnage sémantique (`vMAJEUR.MINEUR.CORRECTIF`) et identifient les versions livrées.
+
+---
+
 ## 🏗 Architecture
 
 ### Structure du projet
@@ -442,25 +494,32 @@ tail -f var/log/dev.log
 
 ## 🤖 Utilisation de l'Intelligence Artificielle (IA)
 
-Dans le cadre du développement et de la refonte architecturale de l'EC04, des outils d'Intelligence Artificielle ont été ponctuellement mobilisés en mode *pair-programming*.
+Dans le cadre du développement et de la refonte architecturale de l'EC04, des outils d'Intelligence Artificielle ont été ponctuellement mobilisés en mode _pair-programming_.
 
 ### 🛠 Outils Utilisés
-*   **Agent IA (LLM Assistant) :** Intégré à l'environnement pour accompagner le découpage technique et le développement backend.
+
+- **Agent IA (LLM Assistant) :** Intégré à l'environnement pour accompagner le découpage technique et le développement backend.
 
 ### 🎯 Périmètre d'Utilisation
+
 L'IA a été cadrée sur des cibles d'assistance à forte valeur ajoutée :
-*   **Documentation OpenAPI (Swagger) :** Génération automatique des attributs PHP 8 (`#[OA\Get]`, `#[OA\Post]`, schemas JSON) pour chaque endpoint.
-*   **Normalisation REST & HATEOAS :** Refonte des URL (fusion des `/search` dans la route principale) et injection des hyperliens de navigation `_links` dans les réponses API.
-*   **Architecture BDD Hybride :** Conception et intégration combinée au sein du même contrôleur du système SQL (Mise à jour des logs d'authentification `lastSessionId`) et de la base NoSQL MongoDB (Sauvegarde asynchrone des traces via `LogVisite`).
+
+- **Documentation OpenAPI (Swagger) :** Génération automatique des attributs PHP 8 (`#[OA\Get]`, `#[OA\Post]`, schemas JSON) pour chaque endpoint.
+- **Normalisation REST & HATEOAS :** Refonte des URL (fusion des `/search` dans la route principale) et injection des hyperliens de navigation `_links` dans les réponses API.
+- **Architecture BDD Hybride :** Conception et intégration combinée au sein du même contrôleur du système SQL (Mise à jour des logs d'authentification `lastSessionId`) et de la base NoSQL MongoDB (Sauvegarde asynchrone des traces via `LogVisite`).
 
 ### 🗣 Démarche d'Ingénierie de Prompts (Contexte)
+
 Pour obtenir du code de qualité, l'approche a ciblé le macro-contexte plutôt que la micro-génération :
-*   *Prompt Architectural :* "Voici mes deux bases de données. L'objectif est d'assurer la traçabilité des visites dans MongoDB et de sauvegarder la session dans MySQL SQL dans mon EC04. Fais-moi un plan."
-*   *Prompt d'Audit :* "Est-ce que mon EC04 respecte les règles REST standards (nommage, verbes, liens), est bien documenté via swagger et a une logique de test pertinente ?" 
+
+- _Prompt Architectural :_ "Voici mes deux bases de données. L'objectif est d'assurer la traçabilité des visites dans MongoDB et de sauvegarder la session dans MySQL SQL dans mon EC04. Fais-moi un plan."
+- _Prompt d'Audit :_ "Est-ce que mon EC04 respecte les règles REST standards (nommage, verbes, liens), est bien documenté via swagger et a une logique de test pertinente ?"
 
 ### 🛡 Validation et Sécurité du Code IA
+
 Aucun fragment de code n'a été inséré sans un "Security Gate" rigoureux :
-1.  **Vérification Active (Vulnerabilities) :** Toute tentative d'écrire en SQL a été validée pour vérifier l'utilisation systématique de l'ORM Doctrine (Prepared Statements) afin d'annuler les risques d'Injections. 
+
+1.  **Vérification Active (Vulnerabilities) :** Toute tentative d'écrire en SQL a été validée pour vérifier l'utilisation systématique de l'ORM Doctrine (Prepared Statements) afin d'annuler les risques d'Injections.
 2.  **Alignement Métier :** Chaque proposition de l'IA fait d'abord l'objet d'un "Execution Plan" qui doit être relu et validé fonctionnellement.
 3.  **Sanctuarisation par les Tests :** Le code issu de ces collaborations est systématiquement validé par la suite de **57 tests PHPUnit** fonctionnels et unitaires garantissant qu'aucune fonctionnalité historique n'a subi de régression (100% Passed).
 
@@ -511,6 +570,7 @@ Accéder au site : http://localhost:8080.
 ## 🔄 Changements récents & Mises à jour (Changelog)
 
 **Version Actuelle : Normalisation REST & Intégration NoSQL Poussée**
+
 - **Breaking Changes :** Suppression de la route `/api/search` (désormais incluse directement dans l'index `/api/ateliers?parametres=...`).
 - **Feature :** Implémentation du système formel HATEOAS pour l'API (utilisation de blocs `_links` guidant la navigation client).
 - **Feature :** Traçabilité hybride : Traçage des visites sur MongoDB de manière optimisée dès l'appel d'un détail d'atelier (`GET /api/ateliers/{id}`), et sauvegarde SQL du `lastSessionId` unique au moment de la connexion d'un individu.
