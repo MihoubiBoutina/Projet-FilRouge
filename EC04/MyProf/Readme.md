@@ -373,16 +373,13 @@ Un commit est bloqué si la syntaxe PHP ou les tests échouent. La CI conserve e
 
 ### Protection de la branche principale
 
-> ⚠️ **Note d'infrastructure (Dépôt Privé) :**
-> L'application technique stricte des règles de protection de branche par GitHub nécessite un compte _Team/Enterprise_ pour les dépôts privés. L'équipe applique donc ces contraintes de manière organisationnelle.
-
-La branche `main` suit une politique stricte d'intégration. Les règles suivantes sont respectées avant tout merge :
+La branche `main` est protégée sur GitHub. Les règles suivantes sont exigées avant tout merge :
 
 - **Interdiction du push direct :** Tout développement passe obligatoirement par une Pull Request depuis une branche `feature/*` ou `fix/*`.
 - **Revue de code :** Au moins **1 approbation (Code Review)** par un pair est exigée.
-- **Validation CI/CD :** L'intégration est conditionnée par la réussite du pipeline GitHub Actions (les 57 tests PHPUnit doivent être au vert).
+- **Validation CI/CD :** L'intégration est conditionnée par la réussite du pipeline GitHub Actions.
 
-Ce cadre garantit que toute modification intégrée a été relue et validée automatiquement, simulant le comportement d'une branche protégée verrouillée.
+Ce cadre garantit que toute modification intégrée a été relue et validée automatiquement.
 
 ### Tags de version
 
@@ -391,8 +388,8 @@ Après le merge et la validation de `main`, créer puis pousser un tag annoté :
 ```bash
 git checkout main
 git pull origin main
-git tag -a v1.0.0 -m "Release v1.0.0 REST & NoSQL"
-git push origin v1.0.0
+git tag -a v1.0.1 -m "Release v1.0.1 CI/CD"
+git push origin v1.0.1
 ```
 
 Les tags suivent le versionnage sémantique (`vMAJEUR.MINEUR.CORRECTIF`) et identifient les versions livrées.
@@ -534,13 +531,13 @@ Aucun fragment de code n'a été inséré sans un "Security Gate" rigoureux :
 
 1.  **Vérification Active (Vulnerabilities) :** Toute tentative d'écrire en SQL a été validée pour vérifier l'utilisation systématique de l'ORM Doctrine (Prepared Statements) afin d'annuler les risques d'Injections.
 2.  **Alignement Métier :** Chaque proposition de l'IA fait d'abord l'objet d'un "Execution Plan" qui doit être relu et validé fonctionnellement.
-3.  **Sanctuarisation par les Tests :** Le code issu de ces collaborations est systématiquement validé par la suite de **57 tests PHPUnit** fonctionnels et unitaires garantissant qu'aucune fonctionnalité historique n'a subi de régression (100% Passed).
+3.  **Sanctuarisation par les Tests :** Le code issu de ces collaborations est contrôlé par PHPUnit et par le hook `pre-commit`. La suite contient 57 tests; les tests unitaires locaux passent, tandis que les tests fonctionnels nécessitent encore la correction de plusieurs routes API.
 
 ---
 
 ## 📞 Support & Contribution
 
-Pour toute question ou contribution, veuillez ouvrir une [issue](https://github.com/votreprojet/issues) ou soumettre une pull request.
+Pour toute question ou contribution, ouvrez une [issue](https://github.com/MihoubiBoutina/Projet-FilRouge/issues) ou soumettez une Pull Request.
 
 ---
 
@@ -550,41 +547,22 @@ Ce projet est sous licence **MIT**. Voir le fichier [LICENSE](LICENSE) pour plus
 
 ---
 
-**Dernière mise à jour :** April 2026
+## 📝 Historique des modifications
+
+- Normalisation REST et intégration HATEOAS dans les réponses API.
+- Traçabilité hybride SQL/NoSQL : `lastSessionId` côté SQL et `LogVisite` côté MongoDB.
+- Documentation Swagger disponible sur `/api/doc`.
+- Workflow GitHub Actions à la racine du dépôt : PHPUnit puis Build & Publish vers GHCR.
+- Configuration Symfony de test dans `config/packages/test/framework.yaml`.
+- Hook local versionné dans `tools/hooks/pre-commit` pour la syntaxe PHP et les tests unitaires.
+- Tags annotés publiés : `v1.0.0` et `v1.0.1`.
+
+## ✅ État des contrôles
+
+- Hook `pre-commit` : validé, avec 6 tests unitaires et 10 assertions.
+- Suite PHPUnit complète : 57 tests recensés; des échecs fonctionnels restent à corriger avant un pipeline entièrement vert.
+- Build Docker local : à exécuter avec Docker Desktop démarré.
+- Publication GHCR : réalisée par le job `Build & Publish` après réussite du job PHPUnit.
+
+**Dernière mise à jour :** septembre 2026
 **Équipe :** Développement MyProf
-
-Restore : ./scripts/restore.sh (Restaure l'état des deux bases de données).
-
-Bash
-
-# Exemple de lancement manuel d'une sauvegarde
-
-chmod +x scripts/backup.sh
-./scripts/backup.sh
-
-Conventions de Nommage & Documentation
-Nommage : CamelCase pour les classes, snake_case pour les variables Twig, PascalCase pour les entités.
-
-Type Hinting : Utilisation systématique du typage PHP pour réduire les erreurs d'exécution.
-
-Migrations : Gestion stricte des schémas SQL via Doctrine Migrations.
-
-Installation
-Clonez le dépôt : git clone https://github.com/votre-compte/myprof.git
-
-Configurez votre .env.local.
-
-Lancer Docker : docker-compose up -d.
-
-Exécuter les migrations : php bin/console doctrine:migrations:migrate.
-
-Accéder au site : http://localhost:8080.
-
-## 🔄 Changements récents & Mises à jour (Changelog)
-
-**Version Actuelle : Normalisation REST & Intégration NoSQL Poussée**
-
-- **Breaking Changes :** Suppression de la route `/api/search` (désormais incluse directement dans l'index `/api/ateliers?parametres=...`).
-- **Feature :** Implémentation du système formel HATEOAS pour l'API (utilisation de blocs `_links` guidant la navigation client).
-- **Feature :** Traçabilité hybride : Traçage des visites sur MongoDB de manière optimisée dès l'appel d'un détail d'atelier (`GET /api/ateliers/{id}`), et sauvegarde SQL du `lastSessionId` unique au moment de la connexion d'un individu.
-- **Documentation :** Intégration active de **Swagger UI** testable (`/api/doc`).
