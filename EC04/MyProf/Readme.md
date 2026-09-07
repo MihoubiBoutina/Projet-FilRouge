@@ -15,6 +15,8 @@ Une API REST robuste pour la gestion des ateliers de formation, des apprenants e
 - [Tests](#-tests)
 - [CI/CD & Qualité du code](#-cicd--qualité-du-code)
 - [Architecture](#-architecture)
+- [Sécurité & Durcissement Infrastructure](#️-sécurité--durcissement-infrastructure)
+- [Résilience, Sauvegardes & Plan de Reprise](#-résilience-sauvegardes--plan-de-reprise-drp)
 
 ---
 
@@ -34,7 +36,7 @@ Avant de commencer, assurez-vous d'avoir installé :
 
 - 2GB RAM
 - 1GB d'espace disque libre
-- Port 8000, 3306, 27017 disponibles
+- Ports disponibles : 8000 (API), 3306 (MySQL), 27017 (MongoDB), 31415 (Keycloak SSO)
 
 ---
 
@@ -112,6 +114,10 @@ docker-compose up -d
 ```
 
 ✅ L'application est accessible sur : **http://127.0.0.1:8000**
+
+### 🔐 Services d'Authentification
+
+**Authentification SSO :** Le portail d'authentification Keycloak est accessible sur **[http://127.0.0.1:31415](http://127.0.0.1:31415)** pour la génération et la validation des jetons JWT (OAuth2 / OIDC).
 
 ### Arrêter l'application
 
@@ -445,6 +451,7 @@ MyProf/
 | **Base de données (NoSQL)** | MongoDB         | 6.0     |
 | **PHP**                     | FPM             | 8.2     |
 | **Serveur Web**             | Nginx           | 1.25    |
+| **Authentification SSO**    | Keycloak        | Latest  |
 | **Conteneurisation**        | Docker          | 20.10+  |
 | **Documentation API**       | Swagger/OpenAPI | 3.0     |
 
@@ -463,7 +470,31 @@ MyProf/
 
 ---
 
-## 🔐 Sécurité
+## �️ Sécurité & Durcissement Infrastructure
+
+L'architecture conteneurisée applique les règles de durcissement et le principe de défense en profondeur (Conformité CIS Docker & Zero Trust) :
+
+- **Docker Rootless :** Le moteur Docker et l'ensemble des conteneurs s'exécutent en espace utilisateur non-privilégié (`Rootless: true`), éliminant les risques d'escalade de privilèges.
+
+- **Système de fichiers Immuable (`read_only: true`) :** Verrouillage du FS des conteneurs pour bloquer toute injection de code malveillant ou modification non autorisée.
+
+- **Volumes Volatiles (`tmpfs`) :** Redirection des écritures temporaires (logs, sockets SQL/NoSQL) uniquement en mémoire vive volatile, évitant toute persistance accidentelle de données sensibles.
+
+- **Isolation Réseau Strict (Docker Bridge) :**
+    - `prof-sr1-frontend` : Flux Web exposés et accessibles publiquement.
+    - `profs-sr-backend` : Interconnexion API / Keycloak, accès restreint.
+    - `profs-sr-bddSQL` / `profs-sr-bddNOSQL` : Réseaux de persistance étanches (accès direct depuis le frontend strictement interdit).
+
+- **Bridage des Ressources (cgroups) :** Limitation stricte de l'allocation RAM/CPU par conteneur pour prévenir les attaques DoS locales et la consommation excessive de ressources.
+
+---
+
+## �🔐 Sécurité
+
+### 🛡️ Protection contre les Injections (SQLi & NoSQLi)
+
+- **SQL Injection (SQLi) :** Neutralisée par l'utilisation systématique de l'ORM Doctrine et des requêtes préparées paramétrées.
+- **NoSQL Injection (NoSQLi) :** Contrôle des opérateurs MongoDB via une validation stricte du schéma JSON des payloads entrants.
 
 ### Variables sensibles
 
@@ -483,7 +514,31 @@ symfony console secrets:set DATABASE_PASSWORD
 
 ---
 
-## 🐛 Debugging
+## � Résilience, Sauvegardes & Plan de Reprise (DRP)
+
+La stratégie de sauvegarde et de poursuite d'activité s'appuie sur des métriques précises :
+
+| Base de Données     | Type de Données                             | RPO Target  | Outil de Sauvegarde          |
+| :------------------ | :------------------------------------------ | :---------- | :--------------------------- |
+| **MySQL / MariaDB** | Transactionnel (Inscriptions, Utilisateurs) | ≤ 1 heure   | `mariadb-dump` / `mysqldump` |
+| **MongoDB**         | Non-structuré (Avis, Logs de visite)        | ≤ 24 heures | `mongodump`                  |
+
+### Objectifs de Résilience
+
+- **RTO Global (Recovery Time Objective) :** ≤ 4 heures.
+- **Immuabilité Locale Anti-Ransomware :** Exécution du script automatisé `deploy.sh`. Après extraction des archives compressées, le dossier `/backups/` subit un verrouillage défensif des droits en lecture seule (`chmod 400`), empêchant toute altération ou suppression par un processus applicatif compromis.
+
+### Stratégie de Sauvegarde
+
+- **Fréquence MySQL :** Sauvegardes horaires via `mariadb-dump` avec compression gzip.
+- **Fréquence MongoDB :** Sauvegardes quotidiennes via `mongodump` (fenêtre hors-pointe).
+- **Stockage :** Archives versionnées dans `/backups/` avec horodatage et checksums SHA256.
+- **Rétention :** 30 jours minimum pour les sauvegardes MySQL, 90 jours pour MongoDB.
+- **Vérification :** Tests de restauration mensuels sur l'environnement de staging.
+
+---
+
+## �🐛 Debugging
 
 ### Voir tous les routes enregistrées
 
