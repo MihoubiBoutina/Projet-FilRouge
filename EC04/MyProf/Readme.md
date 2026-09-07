@@ -352,7 +352,7 @@ Le développement suit un workflow basé sur les branches :
 
 ### Contrôles automatisés
 
-Le workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) s'exécute sur chaque push vers `main` ou `develop`, ainsi que sur chaque Pull Request vers `main`. Il :
+Le workflow [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) s'exécute sur chaque push vers `main` ou `develop`, ainsi que sur chaque Pull Request vers `main`. Il :
 
 - installe les dépendances avec Composer et PHP 8.2 ;
 - exécute la suite PHPUnit ;
@@ -363,13 +363,15 @@ Le badge en haut de ce document reflète le statut du dernier pipeline GitHub Ac
 
 ### Protection de la branche principale
 
-La branche `main` est protégée dans GitHub avec :
+> ⚠️ **Note d'infrastructure (Dépôt Privé) :**
+> L'application technique stricte des règles de protection de branche par GitHub nécessite un compte *Team/Enterprise* pour les dépôts privés. L'équipe applique donc ces contraintes de manière organisationnelle.
 
-- au moins **1 approbation de revue de code** avant le merge ;
-- l'exigence du contrôle GitHub Actions de CI réussi avant le merge ;
-- l'interdiction du merge si les contrôles obligatoires échouent.
+La branche `main` suit une politique stricte d'intégration. Les règles suivantes sont respectées avant tout merge :
+- **Interdiction du push direct :** Tout développement passe obligatoirement par une Pull Request depuis une branche `feature/*` ou `fix/*`.
+- **Revue de code :** Au moins **1 approbation (Code Review)** par un pair est exigée.
+- **Validation CI/CD :** L'intégration est conditionnée par la réussite du pipeline GitHub Actions (les 57 tests PHPUnit doivent être au vert).
 
-Ces règles garantissent que toute modification intégrée a été relue et validée automatiquement.
+Ce cadre garantit que toute modification intégrée a été relue et validée automatiquement, simulant le comportement d'une branche protégée verrouillée.
 
 ### Tags de version
 
