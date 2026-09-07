@@ -29,8 +29,14 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mbstring, intl, pdo_mysql, mongodb
+          extensions: mbstring, intl, pdo_mysql, mongodb-1.20.1
           coverage: none
+
+      - name: Vérifier la plateforme PHP
+        run: |
+          php --ini
+          php -m
+          php --ri mongodb
 
       - name: Installer les dépendances (Composer)
         run: composer install --prefer-dist --no-progress
