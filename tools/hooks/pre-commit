@@ -1,0 +1,18 @@
+#!/bin/sh
+
+set -eu
+
+REPO_ROOT=$(git rev-parse --show-toplevel)
+PROJECT_DIR="$REPO_ROOT/EC04/MyProf"
+
+echo "[pre-commit] Vérification de la syntaxe PHP..."
+
+git diff --cached --name-only --diff-filter=ACMR | grep -E '\.php$' | while IFS= read -r file; do
+    php -l "$REPO_ROOT/$file" >/dev/null
+done
+
+echo "[pre-commit] Exécution des tests unitaires..."
+cd "$PROJECT_DIR"
+vendor/bin/phpunit tests/Unit tests/MinimalTest.php tests/SimpleTest.php
+
+echo "[pre-commit] Contrôles qualité réussis."

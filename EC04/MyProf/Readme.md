@@ -361,12 +361,23 @@ Le workflow [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) s'exéc
 
 Le badge en haut de ce document reflète le statut du dernier pipeline GitHub Actions.
 
+### Contrôle local avant commit
+
+Le hook versionné [`tools/hooks/pre-commit`](../../tools/hooks/pre-commit) vérifie la syntaxe des fichiers PHP indexés et exécute les tests unitaires avant chaque commit. Pour l'activer dans un clone local :
+
+```bash
+git config core.hooksPath tools/hooks
+```
+
+Un commit est bloqué si la syntaxe PHP ou les tests échouent. La CI conserve en complément l'exécution de la suite PHPUnit complète.
+
 ### Protection de la branche principale
 
 > ⚠️ **Note d'infrastructure (Dépôt Privé) :**
-> L'application technique stricte des règles de protection de branche par GitHub nécessite un compte *Team/Enterprise* pour les dépôts privés. L'équipe applique donc ces contraintes de manière organisationnelle.
+> L'application technique stricte des règles de protection de branche par GitHub nécessite un compte _Team/Enterprise_ pour les dépôts privés. L'équipe applique donc ces contraintes de manière organisationnelle.
 
 La branche `main` suit une politique stricte d'intégration. Les règles suivantes sont respectées avant tout merge :
+
 - **Interdiction du push direct :** Tout développement passe obligatoirement par une Pull Request depuis une branche `feature/*` ou `fix/*`.
 - **Revue de code :** Au moins **1 approbation (Code Review)** par un pair est exigée.
 - **Validation CI/CD :** L'intégration est conditionnée par la réussite du pipeline GitHub Actions (les 57 tests PHPUnit doivent être au vert).
