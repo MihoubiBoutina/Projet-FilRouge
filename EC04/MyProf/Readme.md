@@ -24,13 +24,13 @@ Une API REST robuste pour la gestion des ateliers de formation, des apprenants e
 
 Avant de commencer, assurez-vous d'avoir installÃ© :
 
-| Logiciel                      | Version | VÃ©rification              |
-| ----------------------------- | ------- | -------------------------- |
-| **Docker (Desktop / Engine)** | 20.10+  | `docker --version`         |
-| **Docker Compose**            | 2.0+    | `docker-compose --version` |
-| **PHP**                       | 8.2+    | `php --version`            |
-| **Composer**                  | 2.5+    | `composer --version`       |
-| **Git**                       | 2.30+   | `git --version`            |
+| Logiciel           | Version | VÃ©rification               |
+| ------------------ | ------- | -------------------------- |
+| **Docker Desktop** | 20.10+  | `docker --version`         |
+| **Docker Compose** | 2.0+    | `docker-compose --version` |
+| **PHP**            | 8.2+    | `php --version`            |
+| **Composer**       | 2.5+    | `composer --version`       |
+| **Git**            | 2.30+   | `git --version`            |
 
 **Ressources minimales :**
 
@@ -444,16 +444,16 @@ MyProf/
 
 ### Stack Technique
 
-| Composant                    | Technologie     | Version |
-| ---------------------------- | --------------- | ------- |
-| **Framework**                | Symfony         | 7.x     |
+| Composant                   | Technologie     | Version |
+| --------------------------- | --------------- | ------- |
+| **Framework**               | Symfony         | 7.x     |
 | **Base de donnÃ©es (SQL)**   | MySQL           | 8.0     |
 | **Base de donnÃ©es (NoSQL)** | MongoDB         | 6.0     |
-| **PHP**                      | FPM             | 8.2     |
-| **Serveur Web**              | Nginx           | 1.25    |
-| **Authentification SSO**     | Keycloak        | Latest  |
-| **Conteneurisation**         | Docker          | 20.10+  |
-| **Documentation API**        | Swagger/OpenAPI | 3.0     |
+| **PHP**                     | FPM             | 8.2     |
+| **Serveur Web**             | Nginx           | 1.25    |
+| **Authentification SSO**    | Keycloak        | Latest  |
+| **Conteneurisation**        | Docker          | 20.10+  |
+| **Documentation API**       | Swagger/OpenAPI | 3.0     |
 
 ### ModÃ¨le de donnÃ©es Hybride (SQL / NoSQL)
 
@@ -518,10 +518,10 @@ symfony console secrets:set DATABASE_PASSWORD
 
 La stratÃ©gie de sauvegarde et de poursuite d'activitÃ© s'appuie sur des mÃ©triques prÃ©cises :
 
-| Base de DonnÃ©es    | Type de DonnÃ©es                            | RPO Target    | Outil de Sauvegarde          |
-| :------------------ | :------------------------------------------ | :------------ | :--------------------------- |
+| Base de DonnÃ©es     | Type de DonnÃ©es                             | RPO Target  | Outil de Sauvegarde          |
+| :------------------ | :------------------------------------------ | :---------- | :--------------------------- |
 | **MySQL / MariaDB** | Transactionnel (Inscriptions, Utilisateurs) | â‰¤ 1 heure   | `mariadb-dump` / `mysqldump` |
-| **MongoDB**         | Non-structurÃ© (Avis, Logs de visite)       | â‰¤ 24 heures | `mongodump`                  |
+| **MongoDB**         | Non-structurÃ© (Avis, Logs de visite)        | â‰¤ 24 heures | `mongodump`                  |
 
 ### Objectifs de RÃ©silience
 
@@ -630,3 +630,4 @@ Ce projet est sous licence **MIT**. Voir le fichier [LICENSE](LICENSE) pour plus
 
 **DerniÃ¨re mise Ã  jour :** septembre 2026
 **Ã‰quipe :** DÃ©veloppement MyProf
+
