@@ -2,19 +2,24 @@
 
 namespace App\Service;
 
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class GeminiMatchingService
 {
     private string $apiKey;
+    private LoggerInterface $logger;
     // URL v1beta avec le modèle confirmé par le diagnostic : gemini-2.0-flash
     private string $apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
     public function __construct(
         private HttpClientInterface $httpClient,
-        string $geminiApiKey // Récupéré depuis services.yaml
+        string $geminiApiKey,
+        ?LoggerInterface $logger = null // Récupéré depuis services.yaml
     ) {
         $this->apiKey = $geminiApiKey;
+        $this->logger = $logger ?? new NullLogger();
     }
 
     public function getBestMatches(string $learnerProfile, array $workshops): string
@@ -56,7 +61,10 @@ class GeminiMatchingService
             return $responseData['candidates'][0]['content']['parts'][0]['text'] ?? "[]";
 
         } catch (\Exception $e) {
-            // 5. MODE SIMULATION : Fallback propre en cas d'erreur
+            $this->logger->warning('Gemini matching unavailable, using fallback', [
+                'exception' => $e,
+            ]);
+
             $fallbackResults = [];
             foreach (array_slice($workshops, 0, 3) as $index => $workshop) {
                 $fallbackResults[] = [

@@ -86,7 +86,7 @@ class ApiSimpleTest extends WebTestCase
         $client->request('POST', '/api/ateliers', [], [], ['CONTENT_TYPE' => 'application/json'], '{}');
 
         // Le endpoint retourne 422 pour données manquantes
-        $this->assertResponseStatusCodeSame(400);
+        $this->assertResponseStatusCodeSame(422);
     }
 
     /**
@@ -120,7 +120,7 @@ class ApiSimpleTest extends WebTestCase
         $client = static::createClient();
         $client->request('POST', '/api/avis', [], [], ['CONTENT_TYPE' => 'application/json'], '{}');
 
-        $this->assertResponseStatusCodeSame(400);
+        $this->assertResponseStatusCodeSame(422);
     }
 
     /**
@@ -141,6 +141,13 @@ class ApiSimpleTest extends WebTestCase
         $client->request('POST', '/api/avis', [], [], ['CONTENT_TYPE' => 'application/json'], $payload);
 
         $this->assertResponseStatusCodeSame(201);
+        $created = json_decode($client->getResponse()->getContent(), true);
+        $this->assertIsString($created['id']);
+
+        $client->request('GET', '/api/avis');
+        $this->assertResponseStatusCodeSame(200);
+        $avis = json_decode($client->getResponse()->getContent(), true)['avis'];
+        $this->assertNotEmpty(array_filter($avis, fn(array $item): bool => $item['id'] === $created['id']));
     }
 
     // ==============================================

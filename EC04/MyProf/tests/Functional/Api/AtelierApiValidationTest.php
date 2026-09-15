@@ -88,6 +88,12 @@ class AtelierApiValidationTest extends WebTestCase
         );
 
         $this->assertResponseStatusCodeSame(201);
+        $created = json_decode($client->getResponse()->getContent(), true);
+        $this->assertIsInt($created['id']);
+
+        $client->request('GET', '/api/ateliers/' . $created['id']);
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertSame('PHP Avancé', json_decode($client->getResponse()->getContent(), true)['titre']);
     }
 
     /**

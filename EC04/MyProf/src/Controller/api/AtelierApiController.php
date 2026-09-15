@@ -5,7 +5,9 @@ namespace App\Controller\api;
 use App\Document\Avis;
 use App\Document\LogVisite;
 use App\Repository\AtelierRepository;
+use App\Repository\UserApprenantRepository;
 use App\Repository\UserFormateurRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use OpenApi\Attributes as OA;
 use App\Service\NotificationServiceInterface;
@@ -143,16 +145,29 @@ class AtelierApiController extends AbstractController
         description: 'Crée un nouvel atelier',
         tags: ['Ateliers']
     )]
-    public function createAtelier(Request $request, NotificationServiceInterface $notificationService): JsonResponse
-    {
-        $data = json_decode($request->getContent(), true);
+    public function createAtelier(
+        Request $request,
+        NotificationServiceInterface $notificationService,
+        EntityManagerInterface $entityManager,
+        UserFormateurRepository $formateurRepository
+    ): JsonResponse {
+        try {
+            $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            return $this->json(['error' => 'Invalid JSON payload'], 400);
+        }
 
-        if (!$data) {
+        if (!is_array($data)) {
             return $this->json(['error' => 'Invalid JSON payload'], 400);
         }
 
         $required = ['titre', 'description', 'dureeHeure', 'place', 'formateurId', 'startAt'];
-        $missing = array_filter($required, fn($field) => empty($data[$field]));
+        $missing = array_values(array_filter(
+            $required,
+            fn(string $field): bool => !array_key_exists($field, $data)
+                || $data[$field] === null
+                || (is_string($data[$field]) && trim($data[$field]) === '')
+        ));
 
         if (!empty($missing)) {
             return $this->json([
@@ -161,10 +176,47 @@ class AtelierApiController extends AbstractController
             ], 422);
         }
 
-        // Simuler l'envoi de notification (pour le test 5)
-        $notificationService->sendEmailNotification('formateur@example.com', 'Nouvel atelier', 'Un atelier a été créé');
+        if (
+            !is_int($data['dureeHeure']) || $data['dureeHeure'] < 1
+            || !is_int($data['place']) || $data['place'] < 1
+            || !is_int($data['formateurId'])
+        ) {
+            return $this->json(['error' => 'Validation Failed', 'fields' => ['dureeHeure', 'place', 'formateurId']], 422);
+        }
 
-        return $this->json(['message' => 'Atelier created', 'id' => 1], 201);
+        if (!is_string($data['startAt'])) {
+            return $this->json(['error' => 'Validation Failed', 'fields' => ['startAt']], 422);
+        }
+
+        try {
+            $startAt = new \DateTimeImmutable($data['startAt']);
+        } catch (\Exception) {
+            return $this->json(['error' => 'Validation Failed', 'fields' => ['startAt']], 422);
+        }
+
+        $formateur = $formateurRepository->find($data['formateurId']);
+        if (!$formateur) {
+            return $this->json(['error' => 'Formateur introuvable'], 404);
+        }
+
+        $atelier = (new \App\Entity\Atelier())
+            ->setTitre(trim($data['titre']))
+            ->setDescription(trim($data['description']))
+            ->setDureeHeure($data['dureeHeure'])
+            ->setPlace($data['place'])
+            ->setStartAt($startAt)
+            ->setFormateur($formateur);
+
+        $entityManager->persist($atelier);
+        $entityManager->flush();
+
+        $notificationService->sendEmailNotification(
+            (string) $formateur->getEmail(),
+            'Nouvel atelier',
+            'Un atelier a été créé'
+        );
+
+        return $this->json(['message' => 'Atelier created', 'id' => $atelier->getId()], 201);
     }
 
     #[Route('/avis', name: 'avis_create', methods: ['POST'])]
@@ -172,25 +224,58 @@ class AtelierApiController extends AbstractController
         description: 'Crée un nouvel avis',
         tags: ['Avis']
     )]
-    public function createAvis(Request $request): JsonResponse
-    {
-        $data = json_decode($request->getContent(), true);
+    public function createAvis(
+        Request $request,
+        DocumentManager $documentManager,
+        AtelierRepository $atelierRepository,
+        UserApprenantRepository $apprenantRepository
+    ): JsonResponse {
+        try {
+            $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            return $this->json(['error' => 'Invalid JSON payload'], 400);
+        }
 
-        if (!$data) {
+        if (!is_array($data)) {
             return $this->json(['error' => 'Invalid JSON payload'], 400);
         }
 
         $required = ['commentaire', 'note', 'apprenantId', 'atelierId'];
-        $missing = array_filter($required, fn($field) => empty($data[$field]));
+        $missing = array_values(array_filter(
+            $required,
+            fn(string $field): bool => !array_key_exists($field, $data)
+                || $data[$field] === null
+                || (is_string($data[$field]) && trim($data[$field]) === '')
+        ));
 
         if (!empty($missing)) {
             return $this->json(['error' => 'Validation Failed', 'fields' => $missing], 422);
         }
 
-        if ($data['note'] < 1 || $data['note'] > 5) {
+        if (
+            !is_int($data['note']) || $data['note'] < 1 || $data['note'] > 5
+            || !is_int($data['apprenantId']) || !is_int($data['atelierId'])
+        ) {
             return $this->json(['error' => 'Note invalid'], 422);
         }
 
-        return $this->json(['message' => 'Avis created', 'id' => uniqid()], 201);
+        if (!$apprenantRepository->find($data['apprenantId'])) {
+            return $this->json(['error' => 'Apprenant introuvable'], 404);
+        }
+
+        if (!$atelierRepository->find($data['atelierId'])) {
+            return $this->json(['error' => 'Atelier introuvable'], 404);
+        }
+
+        $avis = (new Avis())
+            ->setCommentaire(trim($data['commentaire']))
+            ->setNote($data['note'])
+            ->setApprenantId($data['apprenantId'])
+            ->setAtelierId($data['atelierId']);
+
+        $documentManager->persist($avis);
+        $documentManager->flush();
+
+        return $this->json(['message' => 'Avis created', 'id' => $avis->getId()], 201);
     }
 }

@@ -1,0 +1,57 @@
+name: Qualite / Coverage Gate
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  quality:
+    name: PHPUnit + Coverage Gate
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: myprof_test
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
+
+      mongodb:
+        image: mongo:6.0
+        ports:
+          - 27017:27017
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, mongodb
+          coverage: xdebug
+
+      - name: Composer install
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Run PHPUnit with coverage
+        env:
+          DATABASE_URL: "mysql://root:root@127.0.0.1:3306/myprof_test"
+          MONGODB_URL: "mongodb://127.0.0.1:27017/myprof_test"
+        run: vendor/bin/phpunit --coverage-xml coverage-xml --coverage-text
+
+      - name: Enforce 70% coverage threshold
+        run: php tools/coverage-check.php 70
+
+      - name: Publish coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: phpunit-coverage
+          path: coverage-xml/
+          if-no-files-found: error
