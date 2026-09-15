@@ -1,0 +1,54 @@
+site_name: MyProf Documentation
+site_description: Documentation technique, architecture, sécurité cloud et guide qualité de la plateforme MyProf
+site_author: MyProf
+repo_name: MyProf
+repo_url: https://github.com/MihoubiBoutina/Projet-FilRouge
+
+docs_dir: docs
+
+nav:
+  - Accueil: index.md
+  - Architecture: architecture.md
+  - "Sécurité Cloud (Module BC04-FM04)":
+      - IAM & Keycloak: security/iam-keycloak.md
+      - Secrets & KMS: security/secrets-kms.md
+      - Incident Response: security/incident-response.md
+      - Protection des données: security/data-protection-hardening.md
+  - Guide Qualité:
+      - Vue d'ensemble: guide-qualite.md
+      - Revue de code: quality/code-review.md
+      - Rétrospective: quality/retrospective.md
+      - Analyse racine: quality/root-cause-analysis.md
+  - Dépannage:
+      - Vue d'ensemble: troubleshooting.md
+      - Conflit de ports Docker: troubleshooting/docker-port-conflict.md
+      - Migration Doctrine: troubleshooting/doctrine-migration.md
+      - Keycloak SSO: troubleshooting/keycloak-sso.md
+      - MongoDB avis & traçabilité: troubleshooting/mongodb-avis-traceability.md
+  - ADR:
+      - ADR 0001: adr/0001-choix-architecture-persistance.md
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - search.highlight
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+
+plugins:
+  - search
