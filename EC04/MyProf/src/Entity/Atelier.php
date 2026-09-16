@@ -156,6 +156,10 @@ class Atelier
 
     public function addInscriptionAtelier(InscriptionAtelier $inscriptionAtelier): static
     {
+        if (!$this->canAcceptNewInscription()) {
+            throw new \LogicException('Cet atelier est complet : aucune inscription supplémentaire ne peut être ajoutée.');
+        }
+
         if (!$this->inscriptionAteliers->contains($inscriptionAtelier)) {
             $this->inscriptionAteliers->add($inscriptionAtelier);
             $inscriptionAtelier->setAtelier($this);
@@ -165,10 +169,24 @@ class Atelier
     }
 
     public function removeInscriptionAtelier(InscriptionAtelier $inscriptionAtelier): static
-        {
-            $this->inscriptionAteliers->removeElement($inscriptionAtelier);
-            return $this;
+    {
+        $this->inscriptionAteliers->removeElement($inscriptionAtelier);
+        return $this;
+    }
+
+    public function countInscriptions(): int
+    {
+        return $this->inscriptionAteliers->count();
+    }
+
+    public function canAcceptNewInscription(int $number = 1): bool
+    {
+        if ($this->place === null) {
+            return true;
         }
+
+        return ($this->countInscriptions() + $number) <= $this->place;
+    }
 
     /**
      * @return Collection<int, Avis>

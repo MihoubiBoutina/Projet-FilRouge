@@ -1,7 +1,6 @@
 services:
-  # 1. Votre Base de données MySQL locale (SQL)
   db:
-    image: mariadb:10.11 # On utilise MariaDB qui est déjà disponible et légère sur votre serveur
+    image: mariadb:10.11
     container_name: db_sql_bouti
     restart: always
     environment:
@@ -14,13 +13,11 @@ services:
     networks:
       - symfony_network
 
-  # 2. Votre application Symfony (Image GHCR)
   php:
-    image: ghcr.io/mihoubiboutina/projet-filrouge:latest # Votre image GHCR en minuscules !
+    image: ghcr.io/mihoubiboutina/projet-filrouge:latest
     container_name: app_symfony_bouti
     restart: always
     environment:
-      # Connexion à notre MariaDB
       DATABASE_URL: "mysql://symfony_user:symfony_password_secu@db:3306/myprof_db?serverVersion=10.11-mariadb&charset=utf8mb4"
       APP_ENV: prod
       APP_SECRET: un_secret_bien_garde
@@ -29,18 +26,14 @@ services:
     networks:
       - symfony_network
 
-  # 3. Serveur Web Nginx
   web:
     image: nginx:alpine
     container_name: web_nginx_bouti
     restart: always
     ports:
-      # /!\ ATTENTION : On utilise un port unique (ex: 31414) pour ne pas bloquer le port 80 du serveur
       - "31414:80"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
-    volumes_from:
-      - php
     depends_on:
       - php
     networks:

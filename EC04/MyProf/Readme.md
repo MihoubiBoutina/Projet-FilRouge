@@ -1,527 +1,306 @@
-﻿# ðŸŽ“ MyProf - Plateforme de Gestion des Ateliers
+﻿# MyProf - Plateforme de gestion des ateliers
 
 [![CI/CD](https://github.com/MihoubiBoutina/Projet-FilRouge/actions/workflows/ci.yml/badge.svg)](https://github.com/MihoubiBoutina/Projet-FilRouge/actions/workflows/ci.yml)
 
-Une API REST robuste pour la gestion des ateliers de formation, des apprenants et des avis. Construite avec **Symfony 7**, **MySQL**, **MongoDB** et **Docker**.
+MyProf est une application Symfony dédiée à la gestion des ateliers de formation, des inscriptions, des avis et de la traçabilité des activités. Le projet a été enrichi au fil du développement avec une architecture hybride SQL/NoSQL, des mécanismes de sécurité avancés, une documentation MkDocs et une validation de la qualité par tests et revue technique.
 
 ---
 
-## ðŸ“‹ Table des matiÃ¨res
+## Sommaire
 
-- [PrÃ©requis](#-prÃ©requis)
-- [Installation](#-installation)
-- [DÃ©marrage](#-dÃ©marrage)
-- [Endpoints API](#-endpoints-api)
-- [Tests](#-tests)
-- [CI/CD & QualitÃ© du code](#-cicd--qualitÃ©-du-code)
-- [Architecture](#-architecture)
-- [SÃ©curitÃ© & Durcissement Infrastructure](#ï¸-sÃ©curitÃ©--durcissement-infrastructure)
-- [RÃ©silience, Sauvegardes & Plan de Reprise](#-rÃ©silience-sauvegardes--plan-de-reprise-drp)
-
----
-
-## ðŸ›  PrÃ©requis
-
-Avant de commencer, assurez-vous d'avoir installÃ© :
-
-| Logiciel           | Version | VÃ©rification               |
-| ------------------ | ------- | -------------------------- |
-| **Docker Desktop** | 20.10+  | `docker --version`         |
-| **Docker Compose** | 2.0+    | `docker-compose --version` |
-| **PHP**            | 8.2+    | `php --version`            |
-| **Composer**       | 2.5+    | `composer --version`       |
-| **Git**            | 2.30+   | `git --version`            |
-
-**Ressources minimales :**
-
-- 2GB RAM
-- 1GB d'espace disque libre
-- Ports disponibles : 8000 (API), 3306 (MySQL), 27017 (MongoDB), 31415 (Keycloak SSO)
+- [Vue d'ensemble](#vue-densemble)
+- [Architecture technique](#architecture-technique)
+- [Fonctionnalités métier](#fonctionnalités-métier)
+- [Documentation du projet](#documentation-du-projet)
+- [Sécurité et durcissement](#sécurité-et-durcissement)
+- [Qualité, revue et rétrospective](#qualité-revue-et-rétrospective)
+- [Tests et validation](#tests-et-validation)
+- [CI/CD et automatisation](#cicd-et-automatisation)
+- [Démarrage rapide](#démarrage-rapide)
+- [Historique et état actuel](#historique-et-état-actuel)
 
 ---
 
-## ðŸ“¥ Installation
+## Vue d'ensemble
 
-### 1ï¸âƒ£ Cloner le projet
+Le projet s'appuie sur :
+
+- Symfony 7 pour l'API et la logique applicative
+- MySQL pour les données transactionnelles
+- MongoDB pour les données non structurées et la traçabilité
+- Docker Compose pour le déploiement local
+- Keycloak pour l'authentification et la gestion des identités
+- MkDocs Material pour la documentation technique et qualité
+
+Le système couvre des cas métiers réels comme :
+
+- gestion des ateliers et des formateurs
+- inscriptions et validation des capacités
+- avis et commentaires
+- journalisation/traçabilité des accès et visites
+- sécurisation des identités et des secrets
+- documentation technique, qualité et opérations
+
+---
+
+## Architecture technique
+
+### Stack principale
+
+| Composant           | Technologie                  | Rôle                                                            |
+| :------------------ | :--------------------------- | :-------------------------------------------------------------- |
+| Application backend | Symfony 7 / PHP 8.2          | API REST, logique métier, sécurité                              |
+| Base relationnelle  | MySQL                        | Ateliers, inscriptions, utilisateurs, données transactionnelles |
+| Base documentaire   | MongoDB                      | Avis, logs, visite, traçabilité NoSQL                           |
+| Authentification    | Keycloak                     | SSO, JWT, gestion des rôles et MFA                              |
+| Conteneurisation    | Docker Compose               | Environnement local et reproductible                            |
+| Documentation       | MkDocs Material + PDF plugin | Site documentaire et export PDF                                 |
+| CI                  | GitHub Actions               | Tests, build, publication et contrôle qualité                   |
+
+### Modèle hybride SQL/NoSQL
+
+- MySQL contient les données structurées et transactionnelles : ateliers, apprenants, formateurs, inscriptions, comptes, sessions.
+- MongoDB reçoit les données de traçabilité et les documents à forte volumétrie : avis, logs de visite, événements d'audit.
+
+Ce choix reflète une architecture orientée métier et performance, avec séparation claire entre éléments relationnels et éléments d'analyse/traçabilité.
+
+### Règle métier ajoutée : capacité des ateliers
+
+Une règle de validation a été ajoutée pour empêcher les inscriptions au-delà de la capacité définie d'un atelier. Cela a été couvert par des tests unitaires et d'intégration afin de sécuriser le flux de réservation et de prévenir une surcharge de capacité.
+
+---
+
+## Fonctionnalités métier
+
+- Gestion des ateliers et des créneaux
+- Gestion des apprenants et formateurs
+- Inscriptions aux ateliers
+- Contrôle des places restantes
+- Avis et commentaires sur les formateurs/ateliers
+- Consultation API REST
+- Documentation Swagger/OpenAPI
+- Traçabilité des visites via MongoDB
+- Authentification centralisée via Keycloak
+
+---
+
+## Documentation du projet
+
+La documentation du projet est structurée en plusieurs niveaux :
+
+- [docs/index.md](docs/index.md) : page d'accueil du site MkDocs
+- [docs/architecture.md](docs/architecture.md) : architecture technique et choix d'implémentation
+- [docs/guide-qualite.md](docs/guide-qualite.md) : guide global de qualité
+- [docs/quality/code-review.md](docs/quality/code-review.md) : grille de revue de code
+- [docs/quality/retrospective.md](docs/quality/retrospective.md) : résultats de rétrospective d'équipe
+- [docs/quality/root-cause-analysis.md](docs/quality/root-cause-analysis.md) : analyse racine
+- [docs/troubleshooting.md](docs/troubleshooting.md) : support et résolution de problèmes
+- [docs/security/iam-keycloak.md](docs/security/iam-keycloak.md) : IAM, rôles, MFA, JWT et responsabilité des accès
+- [docs/security/secrets-kms.md](docs/security/secrets-kms.md) : gestion des clés et des secrets
+- [docs/security/incident-response.md](docs/security/incident-response.md) : surveillance, détection et réponse aux incidents
+- [docs/security/data-protection-hardening.md](docs/security/data-protection-hardening.md) : protection des données et durcissement de l'infrastructure
+- [docs/adr/](docs/adr/) : décisions d'architecture formalisées
+
+La documentation est centralisée avec MkDocs et un export PDF possible via le plugin `with-pdf`.
+
+---
+
+## Sécurité et durcissement
+
+### 1. Sécurisation des données
+
+Le projet applique une logique de protection des données dans les deux états principaux :
+
+- en transit : HTTPS obligatoire, TLS 1.3, HSTS, redirection HTTP vers HTTPS
+- au repos : chiffrement des volumes et données sensibles, utilisation de KMS / chiffrement AES-256 sur les éléments critiques
+
+### 2. Sécurité IAM / accès
+
+Le document IAM-Keycloak couvre :
+
+- gestion des utilisateurs et rôles
+- politiques RBAC/ABAC
+- MFA obligatoire pour certains profils
+- politique JWT et durée des tokens
+- procédure de révocation et de désactivation des comptes
+
+### 3. Secrets et clés
+
+Le document secrets-kms traite :
+
+- stockage hors des fichiers source et images Docker
+- responsabilité de gestion des secrets
+- rotation des clés
+- utilisation de KMS ou de solutions équivalentes
+- bonne pratique de séparation des responsabilités
+
+### 4. Durcissement infrastructure
+
+Les pratiques documentées incluent :
+
+- conteneurs sans privilège root
+- accès en lecture seule pour les fichiers système
+- utilisation de `tmpfs` et blocage des capacités inutiles
+- politique de chiffrement sur les objets de stockage
+- désactivation de tout accès public
+- versionnement des données
+
+### 5. Réponse aux incidents
+
+Le plan d'intervention couvre :
+
+- collecte de logs
+- détection et priorisation des événements
+- investigation et analyse de cause racine
+- communication interne et externe
+- notification CNIL / organismes concernés si nécessaire
+- plan de retour à un état sûr
+
+---
+
+## Qualité, revue et rétrospective
+
+Le projet a intégré une démarche de qualité documentaire et technique :
+
+- revue de code structurée sur critères de lisibilité, sécurité, typage PHP, tests et maintenabilité
+- rétrospective d'équipe sous format 4L / Start-Stop-Continue
+- analyse racine des incidents ou défauts de conception
+- plan d'action associé à chaque retour d'expérience
+
+Les documents qualité sont présents dans :
+
+- [docs/quality/code-review.md](docs/quality/code-review.md)
+- [docs/quality/retrospective.md](docs/quality/retrospective.md)
+- [docs/quality/root-cause-analysis.md](docs/quality/root-cause-analysis.md)
+
+---
+
+## Tests et validation
+
+Le projet est validé par une suite de tests ciblés sur la logique métier critique.
+
+### Validation actuelle exécutée
+
+Commande réalisée :
 
 ```bash
-git clone <votre-repo-url>
-cd MyProf
+cd "c:\xampp\htdocs\filRouge\EC04\MyProf"; php vendor/bin/phpunit tests/Unit/AtelierCapacityTest.php tests/Integration/AtelierInscriptionCapacityIntegrationTest.php --testdox
 ```
 
-### 2ï¸âƒ£ Configurer les variables d'environnement
+Résultat vérifié :
 
-```bash
-# Copier le fichier .env.example
-cp .env .env.local
-```
+- exit code : 0
+- tests : OK
+- aucun échec détecté
 
-VÃ©rifiez que `.env.local` contient :
+Cette validation couvre notamment la règle métier de capacité d'un atelier et son comportement lors d'une inscription supérieure au quota disponible.
 
-```env
-APP_ENV=dev
-DATABASE_URL="mysql://root:root@mysql:3306/myprof"
-MONGODB_URL="mongodb://root:root@mongodb:27017/myprof?authSource=admin"
-```
+### Types de tests présents
 
-### 3ï¸âƒ£ Installer les dÃ©pendances
+- tests unitaires pour la logique métier isolée
+- tests d'intégration pour les flux réels d'inscription
+- tests de contrôleur et de services selon les besoins applicatifs
+
+---
+
+## CI/CD et automatisation
+
+Le dépôt comporte une pipeline GitHub Actions qui vérifie :
+
+- installation des dépendances PHP et MongoDB
+- exécution de la suite PHPUnit
+- préparation de l'environnement de test
+- construction des images Docker
+- build de la documentation MkDocs
+
+Un système de contrôle local a aussi été mis en place pour les bonnes pratiques de contribution :
+
+- validation syntaxique PHP
+- exécution des tests avant validation du commit
+- documentation dans le dépôt et script de build de docs
+
+### Build MkDocs
+
+Le site documentaire est configuré dans [mkdocs.yml](mkdocs.yml). Il intègre :
+
+- navigation structurée
+- thématiques qualité, architecture, sécurité et dépannage
+- export PDF de la documentation
+
+Le point important à noter : la génération locale de PDF sous Windows peut nécessiter des dépendances systèmes spécifiques pour WeasyPrint. La chaîne CI est donc conçue pour fonctionner dans un environnement compatible Linux.
+
+---
+
+## Démarrage rapide
+
+### Prérequis
+
+- Docker Desktop / Docker Compose
+- PHP 8.2+
+- Composer 2.x
+- Git
+
+### Installation
 
 ```bash
 composer install
 ```
 
-### 4ï¸âƒ£ Construire et dÃ©marrer Docker
-
 ```bash
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
-VÃ©rifiez que les containers sont actifs :
+### Base de données
 
 ```bash
-docker-compose ps
+php bin/console doctrine:migrations:migrate -n
 ```
 
-### 5ï¸âƒ£ Initialiser la base de donnÃ©es
+### Lancer l'application
 
 ```bash
-# CrÃ©er la base de donnÃ©es MySQL
-symfony console doctrine:database:create
-
-# ExÃ©cuter les migrations
-symfony console doctrine:migrations:migrate -n
-
-# Charger les fixtures (donnÃ©es de test)
-symfony console doctrine:fixtures:load -n
+php bin/console server:start
 ```
 
-âœ… **Installation terminÃ©e en < 5 minutes !**
+ou via Docker selon la configuration locale.
 
----
-
-## ðŸš€ DÃ©marrage
-
-### Lancer le serveur de dÃ©veloppement
+### Documentation
 
 ```bash
-symfony server:start
+mkdocs serve
 ```
 
-Ou directement avec Docker :
+ou :
 
 ```bash
-docker-compose up -d
-```
-
-âœ… L'application est accessible sur : **http://127.0.0.1:8000**
-
-### ðŸ” Services d'Authentification
-
-**Authentification SSO :** Le portail d'authentification Keycloak est accessible sur **[http://127.0.0.1:31415](http://127.0.0.1:31415)** pour la gÃ©nÃ©ration et la validation des jetons JWT (OAuth2 / OIDC).
-
-### ArrÃªter l'application
-
-```bash
-symfony server:stop
-# ou
-docker-compose down
+mkdocs build --strict
 ```
 
 ---
 
-## ðŸ“¡ Endpoints API
+## Historique et état actuel
 
-### ðŸ“š Documentation Interactive
+Le projet est dans un état mature et documenté, avec :
 
-AccÃ©dez Ã  **Swagger UI** pour une documentation interactive :
+- architecture documentée et formalisée
+- sécurisation IAM, secrets et incidents
+- durcissement de l'infrastructure et des données
+- revue qualité et rétrospective intégrées dans les livrables
+- validation fonctionnelle sur la règle de capacité
+- documentation MkDocs opérationnelle et structurée
 
-```
-http://127.0.0.1:8000/api/doc
-```
-
-### ðŸŽ¯ Ateliers
-
-#### Lister tous les ateliers
-
-```http
-GET /api/ateliers
-```
-
-**RÃ©ponse :**
-
-```json
-{
-    "ateliers": [
-        {
-            "id": 1,
-            "titre": "Initiation Ã  PHP",
-            "description": "Une formation complÃ¨te en PHP",
-            "startAt": "2026-04-15T10:00:00+02:00",
-            "dureeHeure": 8,
-            "place": 20,
-            "formateurId": 1
-        }
-    ]
-}
-```
-
-#### Lister et rechercher les ateliers
-
-```http
-GET /api/ateliers?titre=PHP&duree=8&sort=titre
-```
-
-**ParamÃ¨tres de recherche (optionnels) :**
-
-- `titre` (string) - Filtrer par titre
-- `duree` (integer) - DurÃ©e exacte en heures
-- `sort` (string) - Tri des rÃ©sultats (ex: `date`)
-
-**RÃ©ponse (avec liens HATEOAS pour la navigation) :**
-
-```json
-{
-    "ateliers": [
-        {
-            "id": 1,
-            "titre": "Initiation Ã  PHP",
-            "description": "Une formation complÃ¨te en PHP",
-            "startAt": "2026-04-15T10:00:00+02:00",
-            "dureeHeure": 8,
-            "formateurId": 1,
-            "_links": {
-                "self": {
-                    "href": "/api/ateliers/1"
-                }
-            }
-        }
-    ]
-}
-```
-
-#### Voir le dÃ©tail d'un atelier (et dÃ©clencher la traÃ§abilitÃ© NoSQL)
-
-```http
-GET /api/ateliers/{id}
-```
-
-_Note : L'appel Ã  cette route enregistre automatiquement la visite (IP, date) de faÃ§on asynchrone et rapide dans un document `LogVisite` via MongoDB._
+Le projet est donc prêt à être présenté comme une solution complète, sécurisée et documentée, alignée sur les exigences de qualité et de sécurité du module.
 
 ---
 
-### ðŸ‘¨â€ðŸ« Formateurs
+## Licence
 
-#### Rechercher les formateurs
+Ce projet est livré pour usage académique et technique dans le cadre du fil rouge EC04.
 
-```http
-GET /api/formateurs?nom=Dupont
-```
-
-**ParamÃ¨tres :**
-
-- `nom` (string) - Nom du formateur Ã  rechercher (optionnel)
-
-**RÃ©ponse :**
-
-```json
-[
-    {
-        "id": 1,
-        "nom": "Dupont",
-        "prenom": "Jean",
-        "_links": {
-            "avis": {
-                "href": "/api/avis?formateurId=1"
-            }
-        }
-    }
-]
-```
-
----
-
-### â­ Avis
-
-#### Lister tous les avis
-
-```http
-GET /api/avis
-```
-
-#### Filtrer les avis par note
-
-```http
-GET /api/avis?note=5
-```
-
-**ParamÃ¨tres :**
-
-- `note` (integer) - Filtrer par note (1-5)
-
-**RÃ©ponse :**
-
-```json
-{
-    "avis": [
-        {
-            "id": "507f1f77bcf86cd799439011",
-            "commentaire": "Excellent atelier !",
-            "note": 5,
-            "createdAt": "2026-04-10T14:30:00+02:00",
-            "apprenant": {
-                "id": 1,
-                "nom": "Martin",
-                "prenom": "Alice"
-            },
-            "atelier": {
-                "id": 1,
-                "titre": "Initiation Ã  PHP"
-            }
-        }
-    ]
-}
-```
-
----
-
-## ðŸ§ª Tests
-
-### Lancer tous les tests
-
-```bash
-symfony console phpunit
-```
-
-### Lancer les tests d'un fichier spÃ©cifique
-
-```bash
-symfony console phpunit tests/Controller/Api/AtelierApiControllerTest.php
-```
-
-### ExÃ©cuter les tests avec couverture de code
-
-```bash
-symfony console phpunit --coverage-html coverage/
-```
-
-Consultez le rapport HTML : `coverage/index.html`
-
-### Types de tests implÃ©mentÃ©s
-
-**ðŸ“Œ Tests Fonctionnels** (dans `tests/Controller/Api/`)
-
-- Testent les endpoints API complÃ¨tement avec la base de donnÃ©es
-- Exemples : `AtelierApiControllerTest.php`, `AvisApiControllerTest.php`
-- VÃ©rifient les codes HTTP, les formats JSON, les filtres
-
-**ðŸ“Œ Tests Unitaires** (dans `tests/Unit/`)
-
-- Testent la logique mÃ©tier isolÃ©e avec des **mocks**
-- Exemple : `AtelierApiControllerUnitTest.php`
-- Utilisent des mocks du repository pour Ã©viter la base de donnÃ©es
-
-**ðŸ“Œ Examples des Mocks** (dans `tests/Unit/Repository/`)
-
-- DÃ©monstration complÃ¨te des patterns de mock
-- Callbacks, exceptions, retours multiples, etc.
-
-### Tester l'API avec Postman
-
-1. Ouvrez **Postman**
-2. Allez Ã  **File** â†’ **Import**
-3. Entrez l'URL : `http://127.0.0.1:8000/api/doc.json`
-4. Postman importera automatiquement toutes vos routes
-
-### ðŸ“š Documentation dÃ©taillÃ©e
-
-Consultez **[TESTING.md](TESTING.md)** pour la documentation complÃ¨te :
-
-- Comment utiliser les mocks
-- Templates de tests
-- 15+ exemples pratiques
-- Bonnes pratiques et patterns
-- IntÃ©gration CI/CD
-
----
-
-## ðŸ”„ CI/CD & QualitÃ© du code
-
-### Workflow Git
-
-Le dÃ©veloppement suit un workflow basÃ© sur les branches :
-
-1. CrÃ©er une branche dÃ©diÃ©e depuis `main` (`feature/...`, `fix/...` ou `docs/...`).
-2. DÃ©velopper et valider localement avec `vendor/bin/phpunit`.
-3. Ouvrir une Pull Request vers `main`.
-4. Attendre la revue de code et la rÃ©ussite de la CI avant le merge.
-5. Fusionner dans `main`, puis crÃ©er un tag annotÃ© pour une version livrÃ©e.
-
-### ContrÃ´les automatisÃ©s
-
-Le workflow [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) s'exÃ©cute sur chaque push vers `main` ou `develop`, ainsi que sur chaque Pull Request vers `main`. Il :
-
-- installe les dÃ©pendances avec Composer et PHP 8.2 ;
-- active l'extension PHP MongoDB `1.20.1`, compatible avec `composer.lock` ;
-- dÃ©marre un service MongoDB `mongo:7` pour les tests fonctionnels ;
-- prÃ©pare une base SQLite dÃ©diÃ©e Ã  l'environnement `test` ;
-- exÃ©cute la suite PHPUnit ;
-- construit l'image Docker ;
-- publie l'image dans GitHub Container Registry (`ghcr.io`) aprÃ¨s un push hors Pull Request, avec un nom de dÃ©pÃ´t normalisÃ© en minuscules.
-
-Le badge en haut de ce document reflÃ¨te le statut du dernier pipeline GitHub Actions.
-
-### ContrÃ´le local avant commit
-
-Le hook versionnÃ© [`tools/hooks/pre-commit`](../../tools/hooks/pre-commit) vÃ©rifie la syntaxe des fichiers PHP indexÃ©s et exÃ©cute les tests unitaires avant chaque commit. Pour l'activer dans un clone local :
-
-```bash
-git config core.hooksPath tools/hooks
-```
-
-Un commit est bloquÃ© si la syntaxe PHP ou les tests Ã©chouent. La CI conserve en complÃ©ment l'exÃ©cution de la suite PHPUnit complÃ¨te.
-
-### Protection de la branche principale
-
-La branche `main` est protÃ©gÃ©e sur GitHub. Les rÃ¨gles suivantes sont exigÃ©es avant tout merge :
-
-- **Interdiction du push direct :** Tout dÃ©veloppement passe obligatoirement par une Pull Request depuis une branche `feature/*` ou `fix/*`.
-- **Revue de code :** Au moins **1 approbation (Code Review)** par un pair est exigÃ©e.
-- **Validation CI/CD :** L'intÃ©gration est conditionnÃ©e par la rÃ©ussite du pipeline GitHub Actions.
-
-Ce cadre garantit que toute modification intÃ©grÃ©e a Ã©tÃ© relue et validÃ©e automatiquement.
-
-### Tags de version
-
-AprÃ¨s le merge et la validation de `main`, crÃ©er puis pousser un tag annotÃ© :
-
-```bash
-git checkout main
-git pull origin main
-git tag -a v1.0.1 -m "Release v1.0.1 CI/CD"
-git push origin v1.0.1
-```
-
-Les tags suivent le versionnage sÃ©mantique (`vMAJEUR.MINEUR.CORRECTIF`) et identifient les versions livrÃ©es.
-
----
-
-## ðŸ— Architecture
-
-### Structure du projet
-
-```
-MyProf/
-â”œâ”€â”€ src/
-â”‚   â”œâ”€â”€ Controller/          # ContrÃ´leurs (Web + API)
-â”‚   â”‚   â””â”€â”€ api/             # Routes API
-â”‚   â”œâ”€â”€ Entity/              # EntitÃ©s MySQL (ORM Doctrine)
-â”‚   â”œâ”€â”€ Document/            # Documents MongoDB (ODM)
-â”‚   â”œâ”€â”€ Repository/          # RequÃªtes Ã  la BDD
-â”‚   â”œâ”€â”€ Service/             # Logique mÃ©tier
-â”‚   â””â”€â”€ Form/                # Formulaires
-â”œâ”€â”€ tests/
-â”‚   â”œâ”€â”€ Controller/Api/      # Tests fonctionnels des endpoints
-â”‚   â”‚   â”œâ”€â”€ AtelierApiControllerTest.php
-â”‚   â”‚   â””â”€â”€ AvisApiControllerTest.php
-â”‚   â”œâ”€â”€ Unit/                # Tests unitaires avec mocks
-â”‚   â”‚   â”œâ”€â”€ AtelierApiControllerUnitTest.php
-â”‚   â”‚   â””â”€â”€ Repository/
-â”‚   â”‚       â””â”€â”€ AtelierRepositoryMockExampleTest.php
-â”‚   â””â”€â”€ bootstrap.php
-â”œâ”€â”€ config/
-â”‚   â”œâ”€â”€ packages/            # Configuration des bundles
-â”‚   â”œâ”€â”€ routes.yaml          # Routes de l'application
-â”‚   â””â”€â”€ services.yaml        # Services
-â”œâ”€â”€ templates/               # Vues Twig (HTML)
-â”œâ”€â”€ migrations/              # Migrations MySQL
-â”œâ”€â”€ public/                  # Assets (CSS, JS, images)
-â”œâ”€â”€ docker-compose.yaml      # Configuration Docker
-â”œâ”€â”€ composer.json            # DÃ©pendances PHP
-â”œâ”€â”€ phpunit.xml.dist         # Configuration PHPUnit
-â”œâ”€â”€ TESTING.md               # Guide complet des tests
-â””â”€â”€ .env                     # Variables d'environnement
-```
-
-### Stack Technique
-
-| Composant                   | Technologie     | Version |
-| --------------------------- | --------------- | ------- |
-| **Framework**               | Symfony         | 7.x     |
-| **Base de donnÃ©es (SQL)**   | MySQL           | 8.0     |
-| **Base de donnÃ©es (NoSQL)** | MongoDB         | 6.0     |
-| **PHP**                     | FPM             | 8.2     |
-| **Serveur Web**             | Nginx           | 1.25    |
-| **Authentification SSO**    | Keycloak        | Latest  |
-| **Conteneurisation**        | Docker          | 20.10+  |
-| **Documentation API**       | Swagger/OpenAPI | 3.0     |
-
-### ModÃ¨le de donnÃ©es Hybride (SQL / NoSQL)
-
-**MySQL (DonnÃ©es relationnelles & robustes) :**
-
-- **Users** (Apprenants & Formateurs) : SÃ©curitÃ© et gestion des droits (intÃ¨gre une fonctionnalitÃ© de traÃ§abilitÃ© persistante de type `lastSessionId` capturÃ©e lors du login).
-- **Ateliers** : Structure centrale de la proposition de valeur.
-- **Inscriptions** : Liaisons fortes et transactions.
-
-**MongoDB (DonnÃ©es non structurÃ©es & recherches haute performance) :**
-
-- **Avis & Commentaires** : Exploitation maximale des recherches sur gros volumes sans jointures coÃ»teuses (`Avis`).
-- **Analytiques / TraÃ§abilitÃ©** : Sauvegarde ultra-rapide des passages (`LogVisite`) enregistrant massivement les logs de flux des visites sur les Ateliers, tirant parti de la rapiditÃ© d'Ã©criture NoSQL.
-
----
-
-## ï¿½ï¸ SÃ©curitÃ© & Durcissement Infrastructure
-
-L'architecture conteneurisÃ©e applique les rÃ¨gles de durcissement et le principe de dÃ©fense en profondeur (ConformitÃ© CIS Docker & Zero Trust) :
-
-- **Docker Rootless :** Le moteur Docker et l'ensemble des conteneurs s'exÃ©cutent en espace utilisateur non-privilÃ©giÃ© (`Rootless: true`), Ã©liminant les risques d'escalade de privilÃ¨ges.
-
-- **SystÃ¨me de fichiers Immuable (`read_only: true`) :** Verrouillage du FS des conteneurs pour bloquer toute injection de code malveillant ou modification non autorisÃ©e.
-
-- **Volumes Volatiles (`tmpfs`) :** Redirection des Ã©critures temporaires (logs, sockets SQL/NoSQL) uniquement en mÃ©moire vive volatile, Ã©vitant toute persistance accidentelle de donnÃ©es sensibles.
-
-- **Isolation RÃ©seau Strict (Docker Bridge) :**
-    - `prof-sr1-frontend` : Flux Web exposÃ©s et accessibles publiquement.
-    - `profs-sr-backend` : Interconnexion API / Keycloak, accÃ¨s restreint.
-    - `profs-sr-bddSQL` / `profs-sr-bddNOSQL` : RÃ©seaux de persistance Ã©tanches (accÃ¨s direct depuis le frontend strictement interdit).
-
-- **Bridage des Ressources (cgroups) :** Limitation stricte de l'allocation RAM/CPU par conteneur pour prÃ©venir les attaques DoS locales et la consommation excessive de ressources.
-
----
-
-## ï¿½ðŸ” SÃ©curitÃ©
-
-### ðŸ›¡ï¸ Protection contre les Injections (SQLi & NoSQLi)
-
-- **SQL Injection (SQLi) :** NeutralisÃ©e par l'utilisation systÃ©matique de l'ORM Doctrine et des requÃªtes prÃ©parÃ©es paramÃ©trÃ©es.
-- **NoSQL Injection (NoSQLi) :** ContrÃ´le des opÃ©rateurs MongoDB via une validation stricte du schÃ©ma JSON des payloads entrants.
-
-### Variables sensibles
-
-Les variables sensibles sont gÃ©rÃ©es via `.env.local` (ignorÃ© par Git) :
-
-```env
-APP_SECRET=your-secret-key
-DATABASE_URL=mysql://user:password@host:3306/dbname
-MONGODB_URL=mongodb://user:password@host:27017/dbname
-```
-
-### Chiffrer les secrets en production
-
-```bash
-symfony console secrets:set DATABASE_PASSWORD
-```
-
----
-
-## ï¿½ RÃ©silience, Sauvegardes & Plan de Reprise (DRP)
-
-La stratÃ©gie de sauvegarde et de poursuite d'activitÃ© s'appuie sur des mÃ©triques prÃ©cises :
-
-| Base de DonnÃ©es     | Type de DonnÃ©es                             | RPO Target  | Outil de Sauvegarde          |
-| :------------------ | :------------------------------------------ | :---------- | :--------------------------- |
+| Base de DonnÃ©es    | Type de DonnÃ©es                            | RPO Target    | Outil de Sauvegarde          |
+| :------------------ | :------------------------------------------ | :------------ | :--------------------------- |
 | **MySQL / MariaDB** | Transactionnel (Inscriptions, Utilisateurs) | â‰¤ 1 heure   | `mariadb-dump` / `mysqldump` |
-| **MongoDB**         | Non-structurÃ© (Avis, Logs de visite)        | â‰¤ 24 heures | `mongodump`                  |
+| **MongoDB**         | Non-structurÃ© (Avis, Logs de visite)       | â‰¤ 24 heures | `mongodump`                  |
 
 ### Objectifs de RÃ©silience
 
@@ -630,4 +409,3 @@ Ce projet est sous licence **MIT**. Voir le fichier [LICENSE](LICENSE) pour plus
 
 **DerniÃ¨re mise Ã  jour :** septembre 2026
 **Ã‰quipe :** DÃ©veloppement MyProf
-

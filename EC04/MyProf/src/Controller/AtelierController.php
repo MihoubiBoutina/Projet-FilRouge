@@ -98,11 +98,15 @@ final class AtelierController extends AbstractController
         // 2. Récupérer l'objet Apprenant complet depuis MySQL
         $apprenant = $em->getRepository(UserApprenant::class)->find($userSession['id']);
 
+        if (!$atelier->canAcceptNewInscription()) {
+            $this->addFlash('danger', 'Cet atelier est complet : il ne reste plus de place disponible.');
+            return $this->redirectToRoute('app_ateliers_catalogue');
+        }
+
         // 3. Créer l'inscription (Table de liaison)
         $inscription = new InscriptionAtelier();
         $inscription->setAtelier($atelier);
         $inscription->setApprenant($apprenant);// Date de l'inscription
-
 
         $em->persist($inscription);
         $em->flush();
