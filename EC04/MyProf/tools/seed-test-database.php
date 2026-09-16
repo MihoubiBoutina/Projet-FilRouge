@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Entity\Atelier;
+use App\Entity\UserApprenant;
 use App\Entity\UserFormateur;
 use App\Kernel;
 use Symfony\Component\Dotenv\Dotenv;
@@ -19,9 +21,11 @@ $kernel = new Kernel('test', true);
 $kernel->boot();
 
 $entityManager = $kernel->getContainer()->get('doctrine')->getManager();
-$repository = $entityManager->getRepository(UserFormateur::class);
+$formateurRepository = $entityManager->getRepository(UserFormateur::class);
+$apprenantRepository = $entityManager->getRepository(UserApprenant::class);
+$atelierRepository = $entityManager->getRepository(Atelier::class);
 
-$formateur = $repository->findOneBy(['email' => 'ci.formateur@example.com']);
+$formateur = $formateurRepository->findOneBy(['email' => 'ci.formateur@example.com']);
 
 if (!$formateur) {
     $formateur = (new UserFormateur())
@@ -35,4 +39,38 @@ if (!$formateur) {
     $entityManager->flush();
 }
 
-printf("Formateur de test disponible avec l'identifiant %d.%s", $formateur->getId(), PHP_EOL);
+$apprenant = $apprenantRepository->findOneBy(['email' => 'ci.apprenant@example.com']);
+
+if (!$apprenant) {
+    $apprenant = (new UserApprenant())
+        ->setNom('CI')
+        ->setPrenom('Apprenant')
+        ->setEmail('ci.apprenant@example.com')
+        ->setPassword('test-password');
+
+    $entityManager->persist($apprenant);
+    $entityManager->flush();
+}
+
+$atelier = $atelierRepository->findOneBy(['titre' => 'Atelier de test CI']);
+
+if (!$atelier) {
+    $atelier = (new Atelier())
+        ->setTitre('Atelier de test CI')
+        ->setDescription('Atelier créé pour les tests automatisés.')
+        ->setDureeHeure(2)
+        ->setPlace(20)
+        ->setStartAt(new \DateTimeImmutable('+1 day'))
+        ->setFormateur($formateur);
+
+    $entityManager->persist($atelier);
+    $entityManager->flush();
+}
+
+printf(
+    "Données de test disponibles : formateur=%d, apprenant=%d, atelier=%d.%s",
+    $formateur->getId(),
+    $apprenant->getId(),
+    $atelier->getId(),
+    PHP_EOL
+);
