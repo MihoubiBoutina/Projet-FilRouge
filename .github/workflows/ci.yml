@@ -54,7 +54,16 @@ jobs:
       - name: Préparer la base SQLite de test
         run: php bin/console doctrine:schema:create --env=test
 
+      - name: Initialiser les données de test
+        env:
+          MONGODB_URI: mongodb://127.0.0.1:27017/
+          MONGODB_DB: myprof_test
+        run: php tools/seed-test-database.php
+
       - name: Exécuter les tests PHPUnit
+        env:
+          MONGODB_URI: mongodb://127.0.0.1:27017/
+          MONGODB_DB: myprof_test
         run: vendor/bin/phpunit
 
   build:
