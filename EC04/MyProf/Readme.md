@@ -90,10 +90,10 @@ La documentation du projet est structurée en plusieurs niveaux :
 
 - [docs/index.md](docs/index.md) : page d'accueil du site MkDocs
 - [docs/architecture.md](docs/architecture.md) : architecture technique et choix d'implémentation
-- [docs/guide-qualite.md](docs/guide-qualite.md) : guide global de qualité
-- [docs/quality/code-review.md](docs/quality/code-review.md) : grille de revue de code
-- [docs/quality/retrospective.md](docs/quality/retrospective.md) : résultats de rétrospective d'équipe
-- [docs/quality/root-cause-analysis.md](docs/quality/root-cause-analysis.md) : analyse racine
+- [docs/guide-qualite.md](docs/guide-qualite.md) : guide global de qualité du projet
+- [docs/quality/code-review.md](docs/quality/code-review.md) : grille de revue de code et méthode de validation entre pairs
+- [docs/quality/retrospective.md](docs/quality/retrospective.md) : rétrospective d'équipe et plan d'amélioration continue
+- [docs/quality/root-cause-analysis.md](docs/quality/root-cause-analysis.md) : analyse de cause racine selon la méthode 5 Pourquoi
 - [docs/troubleshooting.md](docs/troubleshooting.md) : support et résolution de problèmes
 - [docs/security/iam-keycloak.md](docs/security/iam-keycloak.md) : IAM, rôles, MFA, JWT et responsabilité des accès
 - [docs/security/secrets-kms.md](docs/security/secrets-kms.md) : gestion des clés et des secrets
@@ -102,6 +102,17 @@ La documentation du projet est structurée en plusieurs niveaux :
 - [docs/adr/](docs/adr/) : décisions d'architecture formalisées
 
 La documentation est centralisée avec MkDocs et un export PDF possible via le plugin `with-pdf`.
+
+### Qualité et revue de code
+
+Le projet inclut une vraie démarche qualité documentée dans le dossier [docs/quality/](docs/quality/) :
+
+- le guide qualité explique les critères et les livrables attendus,
+- la revue de code formalise les points à contrôler avant la fusion,
+- la méthode 5 Pourquoi clarifie la cause racine d’un défaut,
+- la rétrospective sert de support à l’amélioration continue.
+
+Un lecteur qui reprend le projet doit donc commencer par [docs/guide-qualite.md](docs/guide-qualite.md), puis consulter les sous-documents de qualité selon le besoin : revue, RCA ou amélioration continue.
 
 ---
 

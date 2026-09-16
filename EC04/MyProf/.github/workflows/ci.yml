@@ -34,8 +34,11 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, mongodb
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, mongodb-1.21.4
           coverage: xdebug
+
+      - name: Vérifier les extensions PHP requises
+        run: php -m | grep -E 'mongodb|pdo_mysql|xdebug'
 
       - name: Installation des dépendances Composer
         run: composer install --prefer-dist --no-progress
