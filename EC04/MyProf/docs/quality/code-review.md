@@ -4,6 +4,8 @@
 
 Cette fiche formalise la méthode de revue de code utilisée pour garantir la qualité du projet MyProf. Elle couvre les critères les plus importants pour une revue constructive, rapide et reproductible : lisibilité, sécurité, typage PHP, tests et maintenabilité.
 
+Cette revue s’applique notamment au TP 4, où la logique de qualité passe par une PR, une relecture par un pair et des retours d’amélioration. Le document doit être exploitable par la personne qui reprend le projet afin de comprendre la logique de validation avant fusion.
+
 ## Grille de critères de revue
 
 | Critère        | Questions à se poser                                                    | Niveau attendu                   |

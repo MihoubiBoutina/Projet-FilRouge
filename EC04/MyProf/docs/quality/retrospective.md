@@ -4,6 +4,8 @@
 
 Cette rétropective formalise la synthèse de l’équipe après une itération de travail. Elle vise à identifier ce qui a bien fonctionné, ce qui a été difficile, et ce qu’il faut améliorer pour la prochaine période.
 
+Elle complète la revue de code et la cause racine en donnant un cadre d’amélioration continue. Son rôle est de transformer les retours de validation en actions concrètes, claires et suivies.
+
 ## Format 4L
 
 ### Liked

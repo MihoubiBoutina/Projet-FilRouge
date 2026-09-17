@@ -1,0 +1,89 @@
+name: CI SkillHub / MyProf
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  tests:
+    name: Build & Test Symfony
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: myprof_test
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+      mongodb:
+        image: mongo:6.0
+        ports:
+          - 27017:27017
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Configuration de PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, mongodb-1.21.4
+          coverage: xdebug
+
+      - name: Vérifier les extensions PHP requises
+        run: php -m | grep -E 'mongodb|pdo_mysql|xdebug'
+
+      - name: Installation des dépendances Composer
+        run: composer install --prefer-dist --no-progress
+
+      - name: Exécution des tests PHPUnit
+        env:
+          DATABASE_URL: "mysql://root:root@127.0.0.1:3306/myprof_test"
+          MONGODB_URL: "mongodb://127.0.0.1:27017/myprof_test"
+        run: vendor/bin/phpunit
+
+  docs:
+    name: Build documentation MkDocs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Configuration de Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Installation des dépendances système pour WeasyPrint
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libcairo2 \
+            libpango-1.0-0 \
+            libpangocairo-1.0-0 \
+            libgdk-pixbuf2.0-0 \
+            libffi-dev \
+            shared-mime-info
+
+      - name: Installation des dépendances MkDocs
+        run: python -m pip install --upgrade pip && python -m pip install -r requirements-docs.txt
+
+      - name: Génération du site et du PDF
+        run: mkdocs build --strict
+
+      - name: Upload de la documentation générée
+        uses: actions/upload-artifact@v4
+        with:
+          name: myprof-docs
+          path: |
+            site/
+            pdf/
+          if-no-files-found: error

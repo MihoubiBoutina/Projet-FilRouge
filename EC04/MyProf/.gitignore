@@ -19,6 +19,11 @@
 /assets/vendor/
 ###< symfony/asset-mapper ###
 
+###> documentation MkDocs ###
+/site/
+/pdf/
+###< documentation MkDocs ###
+
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
