@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Exception\AtelierCompletException;
 use App\Repository\AtelierRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -157,7 +158,7 @@ class Atelier
     public function addInscriptionAtelier(InscriptionAtelier $inscriptionAtelier): static
     {
         if (!$this->canAcceptNewInscription()) {
-            throw new \LogicException('Cet atelier est complet : aucune inscription supplémentaire ne peut être ajoutée.');
+            throw new AtelierCompletException($this->getId());
         }
 
         if (!$this->inscriptionAteliers->contains($inscriptionAtelier)) {

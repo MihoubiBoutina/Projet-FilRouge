@@ -5,6 +5,7 @@ namespace App\Tests\Integration;
 use App\Entity\Atelier;
 use App\Entity\InscriptionAtelier;
 use App\Entity\UserApprenant;
+use App\Exception\AtelierCompletException;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -74,7 +75,7 @@ class AtelierInscriptionCapacityIntegrationTest extends KernelTestCase
         $inscription2->setAtelier($atelier);
         $inscription2->setApprenant($apprenant2);
 
-        $this->expectException(\LogicException::class);
+        $this->expectException(AtelierCompletException::class);
         $atelier->addInscriptionAtelier($inscription2);
     }
 }

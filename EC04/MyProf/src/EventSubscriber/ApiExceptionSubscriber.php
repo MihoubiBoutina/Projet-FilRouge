@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use App\Exception\AtelierCompletException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,9 +24,11 @@ final class ApiExceptionSubscriber implements EventSubscriberInterface
         }
 
         $exception = $event->getThrowable();
-        $status = $exception instanceof HttpExceptionInterface
-            ? $exception->getStatusCode()
-            : 500;
+        $status = match (true) {
+            $exception instanceof HttpExceptionInterface => $exception->getStatusCode(),
+            $exception instanceof AtelierCompletException => 409,
+            default => 500,
+        };
 
         $this->logger->error('API request failed', [
             'path' => $request->getPathInfo(),

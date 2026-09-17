@@ -1,0 +1,41 @@
+site_name: Guide de bonnes pratiques SkillHub
+site_description: Guide interne de qualité logicielle pour SkillHub
+site_author: Equipe projet
+
+docs_dir: docs
+site_dir: site
+
+nav:
+  - 1. Le projet: index.md
+  - 2. Standards et conventions: standards-et-conventions.md
+  - 3. Revue de code: revue-de-code.md
+  - 4. Strategie de tests: strategie-de-tests.md
+  - 5. Execution et resultats: execution-et-resultats-des-tests.md
+  - 6. Documentation technique: documentation-technique.md
+  - 7. Maintenance et partage: maintenance-et-partage.md
+  - 8. Amelioration continue: amelioration-continue.md
+
+theme:
+  name: material
+  language: fr
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - search.highlight
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+
+plugins:
+  - search
